@@ -1,0 +1,2 @@
+D:\MyWork\MyFiles\PandaEngine\x64\Debug\PandaEngine.exe
+D:\MyWork\MyFiles\PandaEngine\x64\Debug\PandaEngine.pdb
