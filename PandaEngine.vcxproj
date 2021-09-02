@@ -147,6 +147,7 @@
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="PandaEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
