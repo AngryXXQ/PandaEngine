@@ -1,2 +1,28 @@
-﻿  PandaEngine.cpp
+﻿  Matrix.cpp
+D:\MyWork\MyFiles\PandaEngine\Matrix.cpp(192,15): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\MyWork\MyFiles\PandaEngine\Matrix.cpp(226,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\MyWork\MyFiles\PandaEngine\Matrix.cpp(227,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\MyWork\MyFiles\PandaEngine\Matrix.cpp(228,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\MyWork\MyFiles\PandaEngine\Matrix.cpp(229,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\MyWork\MyFiles\PandaEngine\Matrix.cpp(230,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\MyWork\MyFiles\PandaEngine\Matrix.cpp(231,15): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\MyWork\MyFiles\PandaEngine\Matrix.cpp(296,29): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\MyWork\MyFiles\PandaEngine\Vector.h(96,14): warning C4244: “return”: 从“double”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\Vector.h(95): message : 在编译 类 模板 成员函数“T Vector3<T>::length(void)”时
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\Vector.h(101): message : 查看对正在编译的函数 模板 实例化“T Vector3<T>::length(void)”的引用
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\Matrix.h(7): message : 查看对正在编译的 类 模板 实例化“Vector3<float>”的引用
+  PandaEngine.cpp
+  正在生成代码...
   PandaEngine.vcxproj -> D:\MyWork\MyFiles\PandaEngine\x64\Debug\PandaEngine.exe

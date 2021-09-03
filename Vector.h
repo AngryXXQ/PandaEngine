@@ -1,5 +1,6 @@
 #pragma once
-
+#include <string>
+#include <type_traits>
 #include <math.h>
 
 template<typename T>
@@ -95,7 +96,7 @@ struct Vector3
 		return sqrt(x * x + y * y + z * z);
 	}
 
-	Vector3& normalize()
+	Vector3& normalized()
 	{
 		T len = length();
 		T factor = 1.0f / len;
