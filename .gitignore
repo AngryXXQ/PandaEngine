@@ -22,3 +22,8 @@ x64/Debug/PandaEngine.tlog/CL.write.1.tlog
 x64/Debug/vc142.idb
 x64/Debug/vc142.pdb
 .vs/PandaEngine/v16/.suo
+*.ilk
+*.log
+*.pdb
+*.tlog
+*.exe
