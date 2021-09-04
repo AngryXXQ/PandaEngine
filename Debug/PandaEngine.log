@@ -1,2 +1,36 @@
-﻿  Model.cpp
+﻿  Camera.cpp
+E:\PandaEngine\Camera.cpp(11,13): warning C4305: “=”: 从“double”到“float”截断
+  Model.cpp
+  ModelImportor.cpp
+E:\PandaEngine\ModelImportor.cpp(132,46): warning C4244: “=”: 从“T”转换到“T”，可能丢失数据
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+          and
+          [
+              T=float
+          ]
+E:\PandaEngine\ModelImportor.cpp(133,46): warning C4244: “=”: 从“T”转换到“T”，可能丢失数据
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+          and
+          [
+              T=float
+          ]
+E:\PandaEngine\ModelImportor.cpp(134,46): warning C4244: “=”: 从“T”转换到“T”，可能丢失数据
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+          and
+          [
+              T=float
+          ]
+  PandaEngine.cpp
+  RenderManager.cpp
+E:\PandaEngine\RenderManager.cpp(42,20): warning C4018: “<”: 有符号/无符号不匹配
+  正在生成代码...
   PandaEngine.vcxproj -> E:\PandaEngine\Debug\PandaEngine.exe

@@ -2,7 +2,7 @@
 
 Model::Model()
 {
-
+	vertexVector.clear();
 }
 
 Model::~Model()
@@ -10,8 +10,11 @@ Model::~Model()
 
 }
 
-bool Model::LoadModel(char* modelName)
+bool Model::LoadModel(const char* modelName)
 {
-	ModelImportor::getInstance()->importModel(modelName);
+	if (ModelImportor::getInstance()->importModel(modelName))
+	{
+		vertexVector = ModelImportor::getInstance()->vertexVector;
+	}
 	return true;
 }

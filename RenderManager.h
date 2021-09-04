@@ -22,7 +22,7 @@ public:
 	void Init();
 	void Update();
 	void Destory();
-	void AddModel(char* model_name);
+	void AddModel(const char* model_name);
 private:
 	static RenderManager* m_RenderManager;
 	Camera* m_MainCamera;

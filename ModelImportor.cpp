@@ -5,6 +5,7 @@ ModelImportor* ModelImportor::m_ModelImportor = NULL;
 ModelImportor::ModelImportor()
 {
 	numTabs = 0;
+    vertexVector.clear();
 }
 
 ModelImportor::~ModelImportor()
@@ -82,9 +83,40 @@ void ModelImportor::PrintNode(FbxNode* pNode) {
     numTabs++;
 
     // Print the node's attributes.
+    /*
     for (int i = 0; i < pNode->GetNodeAttributeCount(); i++)
         PrintAttribute(pNode->GetNodeAttributeByIndex(i));
+    */
 
+    Vector3f vertex[3];
+    FbxMesh* pMesh = pNode->GetMesh();
+    if (pMesh)
+    {
+        int pcount = pMesh->GetPolygonCount();
+        int vertexCounter = 0;
+        for (int i = 0; i < pcount; ++i)
+        {
+            for (int j = 0; j < 3; ++j)
+            {
+                int ctrlPointIndex = pMesh->GetPolygonVertex(i, j);
+                // Read the vertex  
+                ReadVertex(pMesh, ctrlPointIndex, &vertex[j]);
+
+                vertexCounter++;
+            }
+            std::vector<Vector3f> temp;
+            temp.clear();
+            for (int k = 0; k < 3; ++k)
+            {
+                temp.push_back(vertex[k]);
+            }
+            if (temp.size() > 0)
+            {
+                vertexVector.push_back(temp);
+            }
+        }
+    }
+    
     // Recursively print the children.
     for (int j = 0; j < pNode->GetChildCount(); j++)
         PrintNode(pNode->GetChild(j));
@@ -94,11 +126,20 @@ void ModelImportor::PrintNode(FbxNode* pNode) {
     printf("</node>\n");
 }
 
+void ModelImportor::ReadVertex(FbxMesh* pMesh, int ctrlPointIndex, Vector3f* pVertex)
+{
+    FbxVector4* pCtrlPoint = pMesh->GetControlPoints();
+    pVertex->x = pCtrlPoint[ctrlPointIndex][0];
+    pVertex->y = pCtrlPoint[ctrlPointIndex][1];
+    pVertex->z = pCtrlPoint[ctrlPointIndex][2];
+}
+
 /**
  * Main function - loads the hard-coded fbx file,
  * and prints its contents in an xml format to stdout.
  */
 int ModelImportor::importModel(const char* lFilename) {
+    vertexVector.clear();
     // Initialize the SDK manager. This object handles all our memory management.
     FbxManager* lSdkManager = FbxManager::Create();
 
@@ -106,14 +147,20 @@ int ModelImportor::importModel(const char* lFilename) {
     FbxIOSettings* ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
     lSdkManager->SetIOSettings(ios);
 
+    // Load plug-ins from the executable directory  
+    FbxString lExtension = "dll";
+    FbxString lPath = FbxGetApplicationDirectory();
+    lSdkManager->LoadPluginsDirectory(lPath.Buffer(), lExtension.Buffer());
+
     // Create an importer using the SDK manager.
     FbxImporter* lImporter = FbxImporter::Create(lSdkManager, "");
 
     // Use the first argument as the filename for the importer.
     if (!lImporter->Initialize(lFilename, -1, lSdkManager->GetIOSettings())) {
         printf("Call to FbxImporter::Initialize() failed.\n");
-        printf("Error returned: %s\n\n", lImporter->GetStatus().GetErrorString());
-        exit(-1);
+        const char* error = lImporter->GetStatus().GetErrorString();
+        printf("Error returned: %s\n\n", error);
+        return 0;
     }
 
     // Create a new scene so that it can be populated by the imported file.
@@ -135,5 +182,5 @@ int ModelImportor::importModel(const char* lFilename) {
     }
     // Destroy the SDK manager and all the other objects it was handling.
     lSdkManager->Destroy();
-    return 0;
+    return 1;
 }

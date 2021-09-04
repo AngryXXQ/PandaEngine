@@ -34,7 +34,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MyRegisterClass(hInstance);
 
     RenderManager::getInstance()->Init();
-
+    RenderManager::getInstance()->AddModel("res/Death.FBX");
     // 执行应用程序初始化:
     if (!InitInstance (hInstance, nCmdShow))
     {

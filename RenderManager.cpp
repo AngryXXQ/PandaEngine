@@ -12,7 +12,7 @@ RenderManager::~RenderManager()
 
 }
 
-void RenderManager::AddModel(char* model_name)
+void RenderManager::AddModel(const char* model_name)
 {
 	Model* mod = new Model();
 	mod->LoadModel(model_name);
