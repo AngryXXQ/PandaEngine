@@ -3,6 +3,7 @@
 
 #include "framework.h"
 #include "PandaEngine.h"
+#include "RenderManager.h"
 
 #define MAX_LOADSTRING 100
 
@@ -32,6 +33,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDC_PANDAENGINE, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
+    RenderManager::getInstance()->Init();
+
     // 执行应用程序初始化:
     if (!InitInstance (hInstance, nCmdShow))
     {
@@ -50,8 +53,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }        
+        RenderManager::getInstance()->Update();
     }
 
+    RenderManager::getInstance()->Destory();
     return (int) msg.wParam;
 }
 

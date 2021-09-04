@@ -30,7 +30,7 @@ public:
 	Matrix4 RotateMatrix(float x, float y, float z);//旋转矩阵
 	Matrix4 ModelMatrix(Transform t);//模型变换矩阵
 	Matrix4 ViewMatrix(Vector3f& position, Vector3f& target, Vector3f& uparg);//视图矩阵
-	Matrix4 ProjectionMatrix(float fov, float AR, float near, float far);//投影矩阵
+	Matrix4 ProjectionMatrix(float fov, float aspect, float near, float far);//投影矩阵
 private:
 	std::array<float,16> mMatrix{};
 };

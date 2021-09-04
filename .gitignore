@@ -27,3 +27,7 @@ x64/Debug/vc142.pdb
 *.pdb
 *.tlog
 *.exe
+*.ipch
+*.idb
+*.idb
+*.pdb

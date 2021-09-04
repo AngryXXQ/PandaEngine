@@ -291,22 +291,13 @@ Matrix4 Matrix4::ViewMatrix(Vector3f& position, Vector3f& target, Vector3f& upar
     return worldToCam;
 }
 
-Matrix4 Matrix4::ProjectionMatrix(float fov, float AR, float near, float far) {
+Matrix4 Matrix4::ProjectionMatrix(float fov, float aspect, float near, float far) {
     Matrix4 projectionMat;
-    float tanHalfFOVInverse = 1 / tan((fov / 2) * (M_PI / 180));
-
-    //First Row
-    projectionMat(0, 0) = tanHalfFOVInverse; // near/right
-
-    //Second row
-    projectionMat(1, 1) = AR * tanHalfFOVInverse; //near / top (top = right /AR)
-
-    //Third row (Calculated for 1- 0) Inverse z buffer black magic
-    projectionMat(2, 2) = (near) / (far - near);
-    projectionMat(2, 3) = (far * near) / (far - near);
-
-    //Fourth row
-    projectionMat(3, 2) = -1;
-
+    float fax = 1.0f / (float)tan(fov * 0.5f);
+    projectionMat(0, 0) = (float)(fax / aspect);
+    projectionMat(1, 1) = (float)(fax);
+    projectionMat(2, 2) = far / (far - near);
+    projectionMat(3, 2) = -near * far / (far - near);
+    projectionMat(2, 3) = 1;
     return projectionMat;
 }
