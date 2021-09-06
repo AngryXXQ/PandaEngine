@@ -32,14 +32,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_PANDAENGINE, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
-
-    RenderManager::getInstance()->Init();
-    RenderManager::getInstance()->AddModel("res/Death.FBX");
     // 执行应用程序初始化:
     if (!InitInstance (hInstance, nCmdShow))
     {
         return FALSE;
     }
+
+    RenderManager::getInstance()->AddModel("res/Death.FBX");
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_PANDAENGINE));
 
@@ -102,8 +101,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // 将实例句柄存储在全局变量中
 
+   float win_width = 1000;
+   float win_height = 800;
+
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+      CW_USEDEFAULT, 0, win_width, win_height, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
@@ -112,6 +114,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
+
+   RenderManager::getInstance()->Init(hWnd, win_width, win_height);
 
    return TRUE;
 }

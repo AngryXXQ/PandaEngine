@@ -3,7 +3,7 @@
 Camera::Camera()
 {
 	position = Vector3f(0, 0, 0);
-	target = Vector3f(0,0,-1);
+	target = Vector3f(0,0,1);
 	up = Vector3f(0,1,0);
 
 	fov = 60;
