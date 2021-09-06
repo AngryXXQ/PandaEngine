@@ -26,5 +26,5 @@ public:
 private:
 	static RenderManager* m_RenderManager;
 	Camera* m_MainCamera;
-	std::queue<Model> model_queue;
+	std::queue<Model*> model_queue;
 };
