@@ -16,7 +16,7 @@ void RenderManager::AddModel(const char* model_name)
 {
 	Model* mod = new Model();
 	mod->LoadModel(model_name);
-	model_queue.push(*mod);
+	model_queue.push(mod);
 }
 
 void RenderManager::Init()
@@ -41,8 +41,8 @@ void RenderManager::Destory()
 
 	for (int i = 0; i < model_queue.size(); ++i)
 	{
-		Model m = model_queue.front();
-		delete & m;
+		Model* m = model_queue.front();
+		delete m;
 		model_queue.pop();
 	}
 }
