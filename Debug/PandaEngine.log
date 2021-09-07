@@ -1,11 +1,24 @@
-﻿  Model.cpp
+﻿  Buffer.cpp
+D:\MyWork\MyFiles\PandaEngine\Buffer.cpp(12,22): warning C4244: “参数”: 从“float”转换到“const unsigned int”，可能丢失数据
+D:\MyWork\MyFiles\PandaEngine\Buffer.cpp(24,22): warning C4244: “参数”: 从“float”转换到“const unsigned int”，可能丢失数据
+D:\MyWork\MyFiles\PandaEngine\Buffer.cpp(45,9): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
   PandaEngine.cpp
 D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(109,1): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
   RenderManager.cpp
-D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(29,20): warning C4018: “<”: 有符号/无符号不匹配
-D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(63,17): warning C4305: “参数”: 从“double”到“GLfloat”截断
-D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(116,20): warning C4018: “<”: 有符号/无符号不匹配
-D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(125,22): warning C4018: “<”: 有符号/无符号不匹配
-D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(153,20): warning C4018: “<”: 有符号/无符号不匹配
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(30,20): warning C4018: “<”: 有符号/无符号不匹配
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(64,17): warning C4305: “参数”: 从“double”到“GLfloat”截断
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(118,20): warning C4018: “<”: 有符号/无符号不匹配
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(127,22): warning C4018: “<”: 有符号/无符号不匹配
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(133,37): warning C4244: “参数”: 从“T”转换到“const int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(133,31): warning C4244: “参数”: 从“T”转换到“const int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(158,20): warning C4018: “<”: 有符号/无符号不匹配
   正在生成代码...
   PandaEngine.vcxproj -> D:\MyWork\MyFiles\PandaEngine\Debug\PandaEngine.exe

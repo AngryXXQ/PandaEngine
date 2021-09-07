@@ -8,6 +8,7 @@ RenderManager::RenderManager()
 	width = 1000;
 	height = 800;
 	viewportMatrix = viewportMatrix.UnitMatrix4();
+	frameBuffer.ResizeBuffer(width, height);
 }
 
 RenderManager::~RenderManager() 
@@ -90,9 +91,10 @@ void RenderManager::Init(HWND hwnd,float w, float h)
 	height = h;
 	initRenderManager(hwnd);
 	m_MainCamera = new Camera();
+	/*
 	width = 1;
 	height = 1;
-
+	*/
 	viewportMatrix(0, 0) = width / 2;
 	viewportMatrix(0, 3) = width / 2;
 	viewportMatrix(1, 1) = height / 2;
@@ -109,9 +111,9 @@ void RenderManager::Update()
 	{
 		return;
 	}
-
-	glClear(GL_COLOR_BUFFER_BIT);
-	//DrawPoint(Vector3f(0.1,0.2,0.1));
+	Color tcolor(125, 125, 125, 255);
+	frameBuffer.ClearBuffer(tcolor);
+	Color pcolor(255,255,255,255);
 	std::queue<Model*> render_queue = model_queue;
 	for (int i = 0; i < render_queue.size(); ++i)
 	{
@@ -128,10 +130,11 @@ void RenderManager::Update()
 				Vector3f v0 = tM * vlist[0];
 				Vector3f v1 = tM * vlist[1];
 				Vector3f v2 = tM * vlist[2];
+				frameBuffer.WriteBuffer(v0.x, v0.y, pcolor);
+				/*
 				DrawPoint(v0);
 				DrawPoint(v1);
 				DrawPoint(v2);
-				/*
 				DrawLine(v0, v1);
 				DrawLine(v1, v2);
 				DrawLine(v2, v1);
@@ -140,6 +143,8 @@ void RenderManager::Update()
 		}
 		render_queue.pop();
 	}
+	glDrawPixels(1000, 800, GL_RGBA, GL_UNSIGNED_BYTE, frameBuffer.buffer.data());
+	glFlush();
 	SwapBuffers(hdc);
 }
 

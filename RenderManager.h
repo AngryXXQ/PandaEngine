@@ -1,5 +1,6 @@
 #pragma once
 #include "IncludeManager.h"
+#include "Buffer.h"
 #include "Camera.h"
 #include "Model.h"
 #include <queue>
@@ -45,4 +46,5 @@ private:
 	float width;
 	float height;
 	Matrix4 viewportMatrix;
+	Buffer frameBuffer;
 };
