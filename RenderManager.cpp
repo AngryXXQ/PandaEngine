@@ -15,7 +15,13 @@ RenderManager::~RenderManager()
 
 }
 
-
+void RenderManager::ChangeCameraPos(Vector3f offset)
+{
+	if (m_MainCamera)
+	{
+		m_MainCamera->position += offset;
+	}
+}
 
 void RenderManager::initRenderManager(HWND hwnd) {
 	HDC dc = GetDC(hwnd);
@@ -40,7 +46,7 @@ void RenderManager::initRenderManager(HWND hwnd) {
 void RenderManager::DrawLine(Vector3f p1, Vector3f p2)
 {
 	glColor4ub(0, 0, 0, 255);
-	glLineWidth(5);
+	glLineWidth(0.1);
 	glBegin(GL_LINES);
 	glVertex3f(p1.x, p1.y, p1.z);
 	glVertex3f(p2.x, p2.y, p2.z);
@@ -50,7 +56,7 @@ void RenderManager::DrawLine(Vector3f p1, Vector3f p2)
 void RenderManager::DrawPoint(Vector3f p)
 {
 	glColor4ub(255, 0, 0, 255);
-	glPointSize(5);
+	//glPointSize(5);
 	glBegin(GL_POINTS);
 	glVertex3f(p.x, p.y, p.z);
 	glEnd();
@@ -70,10 +76,12 @@ void RenderManager::Init(HWND hwnd,float w, float h)
 	width = w;
 	height = h;
 
-	viewportMatrix(0, 0) = w / 2;
-	viewportMatrix(0, 3) = w / 2;
-	viewportMatrix(1, 1) = h / 2;
-	viewportMatrix(1, 3) = h / 2;
+	width = 1;
+	height = 1;
+	viewportMatrix(0, 0) = width / 2;
+	viewportMatrix(0, 3) = width / 2;
+	viewportMatrix(1, 1) = height / 2;
+	viewportMatrix(1, 3) = height / 2;
 }
 
 void RenderManager::Update()

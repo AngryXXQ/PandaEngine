@@ -35,6 +35,7 @@ public:
 	void Destory();
 	void AddModel(const char* model_name);
 	void initRenderManager(HWND hwnd);
+	void ChangeCameraPos(Vector3f offset);
 private:
 	static RenderManager* m_RenderManager;
 	Camera* m_MainCamera;

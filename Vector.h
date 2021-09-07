@@ -58,7 +58,10 @@ struct Vector3
 
 	Vector3 operator+=(const Vector3& arg)
 	{
-		return Vector3(x + arg.x, y + arg.y, z + arg.z);
+		x += arg.x;
+		y += arg.y;
+		z += arg.z;
+		return (*this);
 	}
 
 	Vector3 operator-(const Vector3& arg)
@@ -68,7 +71,10 @@ struct Vector3
 
 	Vector3 operator-=(const Vector3& arg)
 	{
-		return Vector3(x - arg.x, y - arg.y, z - arg.z);
+		x -= arg.x;
+		y -= arg.y;
+		z -= arg.z;
+		return (*this);
 	}
 
 	Vector3 operator*(const T& arg)
@@ -78,7 +84,10 @@ struct Vector3
 
 	Vector3 operator*=(const T& arg)
 	{
-		return Vector3(x * arg, y * arg, z * arg);
+		x *= arg;
+		y *= arg;
+		z *= arg;
+		return (*this);
 	}
 
 	T Dot(const Vector3& arg)

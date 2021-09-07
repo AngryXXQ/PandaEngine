@@ -2,7 +2,7 @@
 
 Camera::Camera()
 {
-	position = Vector3f(0, 0, 0);
+	position = Vector3f(0, 0, 15);
 	target = Vector3f(0,0,1);
 	up = Vector3f(0,1,0);
 

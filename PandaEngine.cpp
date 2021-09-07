@@ -162,6 +162,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+    case WM_KEYDOWN:
+        {
+            Vector3f offset(0, 0, 0);
+            if (wParam == VK_DOWN)
+            {
+                offset.z -= 1;
+            }
+            else if (wParam == VK_UP)
+            {
+                offset.z += 1;
+            }
+            else if (wParam == VK_LEFT)
+            {
+                offset.x -= 1;
+            }
+            else if (wParam == VK_RIGHT)
+            {
+                offset.x += 1;
+            }
+            RenderManager::getInstance()->ChangeCameraPos(offset);
+        }
+        break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
