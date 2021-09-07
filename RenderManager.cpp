@@ -23,6 +23,20 @@ void RenderManager::ChangeCameraPos(Vector3f offset)
 	}
 }
 
+void RenderManager::RotateModels(Vector3f rot)
+{
+	std::queue<Model*> render_queue = model_queue;
+	for (int i = 0; i < render_queue.size(); ++i)
+	{
+		Model* m = render_queue.front();
+		if (m)
+		{
+			m->modelTransform.rotation += rot;
+		}
+		render_queue.pop();
+	}
+}
+
 void RenderManager::initRenderManager(HWND hwnd) {
 	HDC dc = GetDC(hwnd);
 	hdc = dc;
@@ -62,22 +76,23 @@ void RenderManager::DrawPoint(Vector3f p)
 	glEnd();
 }
 
-void RenderManager::AddModel(const char* model_name)
+void RenderManager::AddModel(const char* model_name,Transform t)
 {
 	Model* mod = new Model();
 	mod->LoadModel(model_name);
+	mod->SetModelTransform(t);
 	model_queue.push(mod);
 }
 
 void RenderManager::Init(HWND hwnd,float w, float h)
 {
-	initRenderManager(hwnd);
-	m_MainCamera = new Camera();
 	width = w;
 	height = h;
-
+	initRenderManager(hwnd);
+	m_MainCamera = new Camera();
 	width = 1;
 	height = 1;
+
 	viewportMatrix(0, 0) = width / 2;
 	viewportMatrix(0, 3) = width / 2;
 	viewportMatrix(1, 1) = height / 2;
@@ -96,8 +111,6 @@ void RenderManager::Update()
 	}
 
 	glClear(GL_COLOR_BUFFER_BIT);
-	Matrix4 tM = m_MainCamera->projectionMatrix * m_MainCamera->viewMatrix;
-	tM = viewportMatrix * tM;
 	//DrawPoint(Vector3f(0.1,0.2,0.1));
 	std::queue<Model*> render_queue = model_queue;
 	for (int i = 0; i < render_queue.size(); ++i)
@@ -105,6 +118,10 @@ void RenderManager::Update()
 		Model* m = render_queue.front();
 		if (m)
 		{
+			Matrix4 modelMatrix = m->GetModelTransform();
+			Matrix4 tM = m_MainCamera->viewMatrix * modelMatrix;
+			tM = m_MainCamera->projectionMatrix * tM;
+			tM = viewportMatrix * tM;
 			for (int j = 0; j < m->vertexVector.size(); ++j)
 			{
 				std::vector<Vector3f> vlist = m->vertexVector[j];

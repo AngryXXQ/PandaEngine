@@ -38,7 +38,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    RenderManager::getInstance()->AddModel("res/Death.FBX");
+    Transform t;
+    t.position = Vector3f(0,0,20);
+    RenderManager::getInstance()->AddModel("res/Death.FBX",t);
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_PANDAENGINE));
 
@@ -164,6 +166,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_KEYDOWN:
         {
+            Vector3f rotation(0, 0, 0);
             Vector3f offset(0, 0, 0);
             if (wParam == VK_DOWN)
             {
@@ -175,11 +178,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
             else if (wParam == VK_LEFT)
             {
-                offset.x -= 1;
+                offset.x += 1;
             }
             else if (wParam == VK_RIGHT)
             {
-                offset.x += 1;
+                offset.x -= 1;
+            }
+            else if (wParam == VK_SPACE)
+            {
+                rotation.y += 1;
+                RenderManager::getInstance()->RotateModels(rotation);
             }
             RenderManager::getInstance()->ChangeCameraPos(offset);
         }

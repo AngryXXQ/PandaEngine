@@ -33,9 +33,10 @@ public:
 	void Init(HWND hwnd, float w, float h);
 	void Update();
 	void Destory();
-	void AddModel(const char* model_name);
+	void AddModel(const char* model_name, Transform t);
 	void initRenderManager(HWND hwnd);
 	void ChangeCameraPos(Vector3f offset);
+	void RotateModels(Vector3f rot);
 private:
 	static RenderManager* m_RenderManager;
 	Camera* m_MainCamera;
