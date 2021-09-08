@@ -111,9 +111,9 @@ void RenderManager::Update()
 	{
 		return;
 	}
+	Color pcolor(255, 255, 255, 255);
 	Color tcolor(125, 125, 125, 255);
 	frameBuffer.ClearBuffer(tcolor);
-	Color pcolor(255,255,255,255);
 	std::queue<Model*> render_queue = model_queue;
 	for (int i = 0; i < render_queue.size(); ++i)
 	{
@@ -130,15 +130,9 @@ void RenderManager::Update()
 				Vector3f v0 = tM * vlist[0];
 				Vector3f v1 = tM * vlist[1];
 				Vector3f v2 = tM * vlist[2];
-				frameBuffer.WriteBuffer(v0.x, v0.y, pcolor);
-				/*
-				DrawPoint(v0);
-				DrawPoint(v1);
-				DrawPoint(v2);
-				DrawLine(v0, v1);
-				DrawLine(v1, v2);
-				DrawLine(v2, v1);
-				*/
+				DrawLine(v0, v1, pcolor);
+				DrawLine(v1, v2, pcolor);
+				DrawLine(v2, v0, pcolor);
 			}
 		}
 		render_queue.pop();
@@ -146,6 +140,61 @@ void RenderManager::Update()
 	glDrawPixels(1000, 800, GL_RGBA, GL_UNSIGNED_BYTE, frameBuffer.buffer.data());
 	glFlush();
 	SwapBuffers(hdc);
+}
+
+
+// »æÖÆÏß¶Î
+void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
+	int x, y, rem = 0;
+	if (v1.x == v2.x && v1.y == v2.y) {
+		frameBuffer.WriteBuffer(v1.x, v1.y, color);
+	}
+	else if (v1.x == v2.x) {
+		int inc = (v1.y <= v2.y) ? 1 : -1;
+		for (y = v1.y; y != v2.y; y += inc)
+		{
+			frameBuffer.WriteBuffer(v1.x, y, color);
+		}
+		frameBuffer.WriteBuffer(v2.x, v2.y, color);
+	}
+	else if (v1.y == v2.y) {
+		int inc = (v1.x <= v2.x) ? 1 : -1;
+		for (x = v1.x; x != v2.x; x += inc)
+		{
+			frameBuffer.WriteBuffer(x, v1.y, color);
+		}
+		frameBuffer.WriteBuffer(v2.x, v2.y, color);
+	}
+	else {
+		int dx = (v1.x < v2.x) ? v2.x - v1.x : v1.x - v2.x;
+		int dy = (v1.y < v2.y) ? v2.y - v1.y : v1.y - v2.y;
+		if (dx >= dy) {
+			if (v2.x < v1.x) x = v1.x, y = v1.y, v1.x = v2.x, v1.y = v2.y, v2.x = x, v2.y = y;
+			for (x = v1.x, y = v1.y; x <= v2.x; x++) {
+				frameBuffer.WriteBuffer(x, y, color);
+				rem += dy;
+				if (rem >= dx) {
+					rem -= dx;
+					y += (v2.y >= v1.y) ? 1 : -1;
+					frameBuffer.WriteBuffer(x, y, color);
+				}
+			}
+			frameBuffer.WriteBuffer(v2.x, v2.y, color);
+		}
+		else {
+			if (v2.y < v1.y) x = v1.x, y = v1.y, v1.x = v2.x, v1.y = v2.y, v2.x = x, v2.y = y;
+			for (x = v1.x, y = v1.y; y <= v2.y; y++) {
+				frameBuffer.WriteBuffer(x, y, color);
+				rem += dx;
+				if (rem >= dy) {
+					rem -= dy;
+					x += (v2.x >= v1.x) ? 1 : -1;
+					frameBuffer.WriteBuffer(x, y, color);
+				}
+			}
+			frameBuffer.WriteBuffer(v2.x, v2.y, color);
+		}
+	}
 }
 
 void RenderManager::Destory()

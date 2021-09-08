@@ -38,6 +38,8 @@ public:
 	void initRenderManager(HWND hwnd);
 	void ChangeCameraPos(Vector3f offset);
 	void RotateModels(Vector3f rot);
+
+	void DrawLine(Vector3f v1, Vector3f v2, Color color);
 private:
 	static RenderManager* m_RenderManager;
 	Camera* m_MainCamera;

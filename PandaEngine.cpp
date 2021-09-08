@@ -40,7 +40,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     Transform t;
     t.position = Vector3f(0,0,20);
-    RenderManager::getInstance()->AddModel("res/Death.FBX",t);
+    //t.scale = Vector3f(0.5, 0.5, 0.5);
+    //RenderManager::getInstance()->AddModel("res/Death.FBX",t);
+    //RenderManager::getInstance()->AddModel("res/Bear_01/Bear_01.fbx", t);
+    RenderManager::getInstance()->AddModel("res/Bat_01/Bat_01.fbx", t);
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_PANDAENGINE));
 
