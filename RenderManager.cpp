@@ -133,6 +133,9 @@ void RenderManager::Update()
 				DrawLine(v0, v1, pcolor);
 				DrawLine(v1, v2, pcolor);
 				DrawLine(v2, v0, pcolor);
+				/*
+				DrawTriangle(v0, v1, v2, pcolor);
+				*/
 			}
 		}
 		render_queue.pop();
@@ -142,10 +145,74 @@ void RenderManager::Update()
 	SwapBuffers(hdc);
 }
 
+// 绘制三角形
+void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color color) {
+	int x, y, rem = 0;
+	if (v1.x == v2.x && v1.y == v2.y) {
+		frameBuffer.WriteBuffer(v1.x, v1.y, color);
+		DrawLine(v0,v1,color);
+	}
+	else if (v1.x == v2.x) {
+		int inc = (v1.y <= v2.y) ? 1 : -1;
+		for (y = v1.y; y != v2.y; y += inc)
+		{
+			frameBuffer.WriteBuffer(v1.x, y, color);
+			DrawLine(v0, Vector3f(v1.x,y,0), color);
+		}
+		frameBuffer.WriteBuffer(v2.x, v2.y, color);
+		DrawLine(v0, Vector3f(v2.x, v2.y, 0), color);
+	}
+	else if (v1.y == v2.y) {
+		int inc = (v1.x <= v2.x) ? 1 : -1;
+		for (x = v1.x; x != v2.x; x += inc)
+		{
+			frameBuffer.WriteBuffer(x, v1.y, color);
+			DrawLine(v0, Vector3f(x, v1.y, 0), color);
+		}
+		frameBuffer.WriteBuffer(v2.x, v2.y, color);
+		DrawLine(v0, Vector3f(v2.x, v2.y, 0), color);
+	}
+	else {
+		int dx = (v1.x < v2.x) ? v2.x - v1.x : v1.x - v2.x;
+		int dy = (v1.y < v2.y) ? v2.y - v1.y : v1.y - v2.y;
+		if (dx >= dy) {
+			if (v2.x < v1.x) x = v1.x, y = v1.y, v1.x = v2.x, v1.y = v2.y, v2.x = x, v2.y = y;
+			for (x = v1.x, y = v1.y; x <= v2.x; x++) {
+				frameBuffer.WriteBuffer(x, y, color);
+				DrawLine(v0, Vector3f(x, y, 0), color);
+				rem += dy;
+				if (rem >= dx) {
+					rem -= dx;
+					y += (v2.y >= v1.y) ? 1 : -1;
+					frameBuffer.WriteBuffer(x, y, color);
+					DrawLine(v0, Vector3f(x, y, 0), color);
+				}
+			}
+			frameBuffer.WriteBuffer(v2.x, v2.y, color);
+			DrawLine(v0, Vector3f(v2.x, v2.y, 0), color);
+		}
+		else {
+			if (v2.y < v1.y) x = v1.x, y = v1.y, v1.x = v2.x, v1.y = v2.y, v2.x = x, v2.y = y;
+			for (x = v1.x, y = v1.y; y <= v2.y; y++) {
+				frameBuffer.WriteBuffer(x, y, color);
+				DrawLine(v0, Vector3f(x, y, 0), color);
+				rem += dx;
+				if (rem >= dy) {
+					rem -= dy;
+					x += (v2.x >= v1.x) ? 1 : -1;
+					frameBuffer.WriteBuffer(x, y, color);
+					DrawLine(v0, Vector3f(x, y, 0), color);
+				}
+			}
+			frameBuffer.WriteBuffer(v2.x, v2.y, color);
+			DrawLine(v0, Vector3f(v2.x, v2.y, 0), color);
+		}
+	}
+}
+
 
 // 绘制线段
 void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
-	/*
 	int x, y, rem = 0;
 	if (v1.x == v2.x && v1.y == v2.y) {
 		frameBuffer.WriteBuffer(v1.x, v1.y, color);
@@ -196,7 +263,6 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 			frameBuffer.WriteBuffer(v2.x, v2.y, color);
 		}
 	}
-	*/
 
 	/*
 	int dx = (int)v2.x - (int)v1.x;
@@ -221,7 +287,6 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 		}
 		frameBuffer.WriteBuffer(x, y, color);
 	}
-	*/
 
 	float dx = v2.x - v1.x;
 	float dy = v2.y - v1.y;
@@ -232,6 +297,7 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 		frameBuffer.WriteBuffer(x, (int)(y + 0.5), color);
 		y += m;
 	}
+	*/
 }
 
 void RenderManager::Destory()

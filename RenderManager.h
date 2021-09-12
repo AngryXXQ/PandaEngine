@@ -40,6 +40,7 @@ public:
 	void RotateModels(Vector3f rot);
 
 	void DrawLine(Vector3f v1, Vector3f v2, Color color);
+	void DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color color);
 private:
 	static RenderManager* m_RenderManager;
 	Camera* m_MainCamera;
