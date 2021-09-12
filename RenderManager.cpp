@@ -145,6 +145,7 @@ void RenderManager::Update()
 
 // ªÊ÷∆œﬂ∂Œ
 void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
+	/*
 	int x, y, rem = 0;
 	if (v1.x == v2.x && v1.y == v2.y) {
 		frameBuffer.WriteBuffer(v1.x, v1.y, color);
@@ -194,6 +195,42 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 			}
 			frameBuffer.WriteBuffer(v2.x, v2.y, color);
 		}
+	}
+	*/
+
+	/*
+	int dx = (int)v2.x - (int)v1.x;
+	int dy = (int)v2.y - (int)v1.y;
+	int d = dx - 2 * dy;
+	int incrE = -2 * dy;
+	int incrNE = 2 * (dx - dy);
+	int x = v1.x;
+	int y = v1.y;
+	frameBuffer.WriteBuffer(x, y, color);
+	while (x < v2.x)
+	{
+		if (d > 0)
+		{
+			d += incrE;
+		}
+		else
+		{
+			d += incrNE;
+			y++;
+			x++;
+		}
+		frameBuffer.WriteBuffer(x, y, color);
+	}
+	*/
+
+	float dx = v2.x - v1.x;
+	float dy = v2.y - v1.y;
+	float m = dy / dx;
+	float y = v1.y;
+	for (int x = v1.x; x <= v2.x; ++x)
+	{
+		frameBuffer.WriteBuffer(x, (int)(y + 0.5), color);
+		y += m;
 	}
 }
 
