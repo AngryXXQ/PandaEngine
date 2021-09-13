@@ -101,6 +101,8 @@ void RenderManager::Init(HWND hwnd,float w, float h)
 	viewportMatrix(1, 3) = height / 2;
 }
 
+#define DRAW_LINE 1
+
 void RenderManager::Update()
 {
 	if (m_MainCamera != NULL)
@@ -130,12 +132,13 @@ void RenderManager::Update()
 				Vector3f v0 = tM * vlist[0];
 				Vector3f v1 = tM * vlist[1];
 				Vector3f v2 = tM * vlist[2];
-				/*
+#ifdef  DRAW_LINE
 				DrawLine(v0, v1, pcolor);
 				DrawLine(v1, v2, pcolor);
 				DrawLine(v2, v0, pcolor);
-				*/
+#elif
 				DrawTriangle(v0, v1, v2, pcolor);
+#endif //  DRAW_LINE
 			}
 		}
 		render_queue.pop();

@@ -175,23 +175,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             Vector3f offset(0, 0, 0);
             if (wParam == VK_DOWN)
             {
-                offset.y -= 1;
+                offset.y -= 0.1;
             }
             else if (wParam == VK_UP)
             {
-                offset.y += 1;
+                offset.y += 0.1;
             }
             else if (wParam == VK_LEFT)
             {
-                offset.x += 1;
+                offset.x -= 0.1;
             }
             else if (wParam == VK_RIGHT)
             {
-                offset.x -= 1;
+                offset.x += 0.1;
             }
             else if (wParam == VK_SPACE)
             {
-                rotation.y += 1;
+                rotation.y += 0.1;
                 RenderManager::getInstance()->RotateModels(rotation);
             }
             RenderManager::getInstance()->ChangeCameraPos(offset);
