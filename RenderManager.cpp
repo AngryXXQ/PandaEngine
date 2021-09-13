@@ -27,7 +27,8 @@ void RenderManager::ChangeCameraPos(Vector3f offset)
 void RenderManager::RotateModels(Vector3f rot)
 {
 	std::queue<Model*> render_queue = model_queue;
-	for (int i = 0; i < render_queue.size(); ++i)
+	int render_count = render_queue.size();
+	for (int i = 0; i < render_count; ++i)
 	{
 		Model* m = render_queue.front();
 		if (m)
@@ -101,7 +102,7 @@ void RenderManager::Init(HWND hwnd,float w, float h)
 	viewportMatrix(1, 3) = height / 2;
 }
 
-#define DRAW_LINE 1
+//#define DRAW_LINE 1
 
 void RenderManager::Update()
 {
@@ -117,7 +118,8 @@ void RenderManager::Update()
 	Color tcolor(125, 125, 125, 255);
 	frameBuffer.ClearBuffer(tcolor);
 	std::queue<Model*> render_queue = model_queue;
-	for (int i = 0; i < render_queue.size(); ++i)
+	int model_count = render_queue.size();
+	for (int i = 0; i < model_count; ++i)
 	{
 		Model* m = render_queue.front();
 		if (m)
@@ -136,9 +138,12 @@ void RenderManager::Update()
 				DrawLine(v0, v1, pcolor);
 				DrawLine(v1, v2, pcolor);
 				DrawLine(v2, v0, pcolor);
-#elif
-				DrawTriangle(v0, v1, v2, pcolor);
 #endif //  DRAW_LINE
+
+#ifndef DRAW_LINE
+				DrawTriangle(v0, v1, v2, pcolor);
+#endif // !DRAW_LINE
+
 			}
 		}
 		render_queue.pop();

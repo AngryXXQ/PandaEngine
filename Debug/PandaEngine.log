@@ -1,8 +1,145 @@
-﻿  PandaEngine.cpp
-D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(43,37): warning C4305: “参数”: 从“double”到“T”截断
+﻿  RenderManager.cpp
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(65,17): warning C4305: “参数”: 从“double”到“GLfloat”截断
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(131,22): warning C4018: “<”: 有符号/无符号不匹配
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(159,9): warning C4244: “初始化”: 从“T”转换到“int”，可能丢失数据
           with
           [
               T=float
           ]
-D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(114,1): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(160,9): warning C4244: “初始化”: 从“T”转换到“int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(161,9): warning C4244: “初始化”: 从“T”转换到“int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(162,9): warning C4244: “初始化”: 从“T”转换到“int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(172,30): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(172,26): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(175,29): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(175,25): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(182,29): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(182,26): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(185,29): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(185,25): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(194,30): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(194,27): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(200,31): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(200,28): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(204,30): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(204,26): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(210,30): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(210,27): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(216,31): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(216,28): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(220,30): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(220,26): warning C4244: “参数”: 从“int”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(229,9): warning C4244: “初始化”: 从“T”转换到“int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(230,9): warning C4244: “初始化”: 从“T”转换到“int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(231,9): warning C4244: “初始化”: 从“T”转换到“int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(232,9): warning C4244: “初始化”: 从“T”转换到“int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\RenderManager.cpp(326,20): warning C4018: “<”: 有符号/无符号不匹配
   PandaEngine.vcxproj -> D:\MyWork\MyFiles\PandaEngine\Debug\PandaEngine.exe
