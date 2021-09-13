@@ -130,12 +130,12 @@ void RenderManager::Update()
 				Vector3f v0 = tM * vlist[0];
 				Vector3f v1 = tM * vlist[1];
 				Vector3f v2 = tM * vlist[2];
+				/*
 				DrawLine(v0, v1, pcolor);
 				DrawLine(v1, v2, pcolor);
 				DrawLine(v2, v0, pcolor);
-				/*
-				DrawTriangle(v0, v1, v2, pcolor);
 				*/
+				DrawTriangle(v0, v1, v2, pcolor);
 			}
 		}
 		render_queue.pop();
@@ -148,64 +148,68 @@ void RenderManager::Update()
 // 绘制三角形
 void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color color) {
 	int x, y, rem = 0;
-	if (v1.x == v2.x && v1.y == v2.y) {
-		frameBuffer.WriteBuffer(v1.x, v1.y, color);
-		DrawLine(v0,v1,color);
+	int x1 = v1.x;
+	int y1 = v1.y;
+	int x2 = v2.x;
+	int y2 = v2.y;
+	if (x1 == x2 && y1 == y2) {
+		frameBuffer.WriteBuffer(x1, y1, color);
+		DrawLine(v0, v1, color);
 	}
-	else if (v1.x == v2.x) {
-		int inc = (v1.y <= v2.y) ? 1 : -1;
-		for (y = v1.y; y != v2.y; y += inc)
+	else if (x1 == x2) {
+		int inc = (y1 <= y2) ? 1 : -1;
+		for (y = y1; y != y2; y += inc)
 		{
-			frameBuffer.WriteBuffer(v1.x, y, color);
-			DrawLine(v0, Vector3f(v1.x,y,0), color);
+			frameBuffer.WriteBuffer(x1, y, color);
+			DrawLine(v0, Vector3f(x1, y, 0), color);
 		}
-		frameBuffer.WriteBuffer(v2.x, v2.y, color);
-		DrawLine(v0, Vector3f(v2.x, v2.y, 0), color);
+		frameBuffer.WriteBuffer(x2, y2, color);
+		DrawLine(v0, Vector3f(x2, y2, 0), color);
 	}
-	else if (v1.y == v2.y) {
-		int inc = (v1.x <= v2.x) ? 1 : -1;
-		for (x = v1.x; x != v2.x; x += inc)
+	else if (y1 == y2) {
+		int inc = (x1 <= x2) ? 1 : -1;
+		for (x = x1; x != x2; x += inc)
 		{
-			frameBuffer.WriteBuffer(x, v1.y, color);
-			DrawLine(v0, Vector3f(x, v1.y, 0), color);
+			frameBuffer.WriteBuffer(x, y1, color);
+			DrawLine(v0, Vector3f(x, y1, 0), color);
 		}
-		frameBuffer.WriteBuffer(v2.x, v2.y, color);
-		DrawLine(v0, Vector3f(v2.x, v2.y, 0), color);
+		frameBuffer.WriteBuffer(x2, y2, color);
+		DrawLine(v0, Vector3f(x2, y2, 0), color);
 	}
 	else {
-		int dx = (v1.x < v2.x) ? v2.x - v1.x : v1.x - v2.x;
-		int dy = (v1.y < v2.y) ? v2.y - v1.y : v1.y - v2.y;
+		int dx = (x1 < x2) ? x2 - x1 : x1 - x2;
+		int dy = (y1 < y2) ? y2 - y1 : y1 - y2;
 		if (dx >= dy) {
-			if (v2.x < v1.x) x = v1.x, y = v1.y, v1.x = v2.x, v1.y = v2.y, v2.x = x, v2.y = y;
-			for (x = v1.x, y = v1.y; x <= v2.x; x++) {
+			if (x2 < x1) x = x1, y = y1, x1 = x2, y1 = y2, x2 = x, y2 = y;
+			for (x = x1, y = y1; x <= x2; x++) {
 				frameBuffer.WriteBuffer(x, y, color);
 				DrawLine(v0, Vector3f(x, y, 0), color);
 				rem += dy;
 				if (rem >= dx) {
 					rem -= dx;
-					y += (v2.y >= v1.y) ? 1 : -1;
+					y += (y2 >= y1) ? 1 : -1;
 					frameBuffer.WriteBuffer(x, y, color);
 					DrawLine(v0, Vector3f(x, y, 0), color);
 				}
 			}
-			frameBuffer.WriteBuffer(v2.x, v2.y, color);
-			DrawLine(v0, Vector3f(v2.x, v2.y, 0), color);
+			frameBuffer.WriteBuffer(x2, y2, color);
+			DrawLine(v0, Vector3f(x2, y2, 0), color);
 		}
 		else {
-			if (v2.y < v1.y) x = v1.x, y = v1.y, v1.x = v2.x, v1.y = v2.y, v2.x = x, v2.y = y;
-			for (x = v1.x, y = v1.y; y <= v2.y; y++) {
+			if (y2 < y1) x = x1, y = y1, x1 = x2, y1 = y2, x2 = x, y2 = y;
+			for (x = x1, y = y1; y <= y2; y++) {
 				frameBuffer.WriteBuffer(x, y, color);
 				DrawLine(v0, Vector3f(x, y, 0), color);
 				rem += dx;
 				if (rem >= dy) {
 					rem -= dy;
-					x += (v2.x >= v1.x) ? 1 : -1;
+					x += (x2 >= x1) ? 1 : -1;
 					frameBuffer.WriteBuffer(x, y, color);
 					DrawLine(v0, Vector3f(x, y, 0), color);
 				}
 			}
-			frameBuffer.WriteBuffer(v2.x, v2.y, color);
-			DrawLine(v0, Vector3f(v2.x, v2.y, 0), color);
+			frameBuffer.WriteBuffer(x2, y2, color);
+			DrawLine(v0, Vector3f(x2, y2, 0), color);
 		}
 	}
 }
@@ -214,53 +218,57 @@ void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color co
 // 绘制线段
 void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 	int x, y, rem = 0;
-	if (v1.x == v2.x && v1.y == v2.y) {
-		frameBuffer.WriteBuffer(v1.x, v1.y, color);
+	int x1 = v1.x;
+	int y1 = v1.y;
+	int x2 = v2.x;
+	int y2 = v2.y;
+	if (x1 == x2 && y1 == y2) {
+		frameBuffer.WriteBuffer(x1, y1, color);
 	}
-	else if (v1.x == v2.x) {
-		int inc = (v1.y <= v2.y) ? 1 : -1;
-		for (y = v1.y; y != v2.y; y += inc)
+	else if (x1 == x2) {
+		int inc = (y1 <= y2) ? 1 : -1;
+		for (y = y1; y != y2; y += inc)
 		{
-			frameBuffer.WriteBuffer(v1.x, y, color);
+			frameBuffer.WriteBuffer(x1, y, color);
 		}
-		frameBuffer.WriteBuffer(v2.x, v2.y, color);
+		frameBuffer.WriteBuffer(x2, y2, color);
 	}
-	else if (v1.y == v2.y) {
-		int inc = (v1.x <= v2.x) ? 1 : -1;
-		for (x = v1.x; x != v2.x; x += inc)
+	else if (y1 == y2) {
+		int inc = (x1 <= x2) ? 1 : -1;
+		for (x = x1; x != x2; x += inc)
 		{
-			frameBuffer.WriteBuffer(x, v1.y, color);
+			frameBuffer.WriteBuffer(x, y1, color);
 		}
-		frameBuffer.WriteBuffer(v2.x, v2.y, color);
+		frameBuffer.WriteBuffer(x2, y2, color);
 	}
 	else {
-		int dx = (v1.x < v2.x) ? v2.x - v1.x : v1.x - v2.x;
-		int dy = (v1.y < v2.y) ? v2.y - v1.y : v1.y - v2.y;
+		int dx = (x1 < x2) ? x2 - x1 : x1 - x2;
+		int dy = (y1 < y2) ? y2 - y1 : y1 - y2;
 		if (dx >= dy) {
-			if (v2.x < v1.x) x = v1.x, y = v1.y, v1.x = v2.x, v1.y = v2.y, v2.x = x, v2.y = y;
-			for (x = v1.x, y = v1.y; x <= v2.x; x++) {
+			if (x2 < x1) x = x1, y = y1, x1 = x2, y1 = y2, x2 = x, y2 = y;
+			for (x = x1, y = y1; x <= x2; x++) {
 				frameBuffer.WriteBuffer(x, y, color);
 				rem += dy;
 				if (rem >= dx) {
 					rem -= dx;
-					y += (v2.y >= v1.y) ? 1 : -1;
+					y += (y2 >= y1) ? 1 : -1;
 					frameBuffer.WriteBuffer(x, y, color);
 				}
 			}
-			frameBuffer.WriteBuffer(v2.x, v2.y, color);
+			frameBuffer.WriteBuffer(x2, y2, color);
 		}
 		else {
-			if (v2.y < v1.y) x = v1.x, y = v1.y, v1.x = v2.x, v1.y = v2.y, v2.x = x, v2.y = y;
-			for (x = v1.x, y = v1.y; y <= v2.y; y++) {
+			if (y2 < y1) x = x1, y = y1, x1 = x2, y1 = y2, x2 = x, y2 = y;
+			for (x = x1, y = y1; y <= y2; y++) {
 				frameBuffer.WriteBuffer(x, y, color);
 				rem += dx;
 				if (rem >= dy) {
 					rem -= dy;
-					x += (v2.x >= v1.x) ? 1 : -1;
+					x += (x2 >= x1) ? 1 : -1;
 					frameBuffer.WriteBuffer(x, y, color);
 				}
 			}
-			frameBuffer.WriteBuffer(v2.x, v2.y, color);
+			frameBuffer.WriteBuffer(x2, y2, color);
 		}
 	}
 

@@ -69,6 +69,14 @@ struct Vector3
 		return Vector3(x - arg.x, y - arg.y, z - arg.z);
 	}
 
+	Vector3 operator-()
+	{
+		x = -x;
+		y = -y;
+		z = -z;
+		return (*this);
+	}
+
 	Vector3 operator-=(const Vector3& arg)
 	{
 		x -= arg.x;

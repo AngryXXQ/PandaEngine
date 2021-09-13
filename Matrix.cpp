@@ -262,7 +262,7 @@ Matrix4 Matrix4::ModelMatrix(Transform t)
 
 Matrix4 Matrix4::ViewMatrix(Vector3f& position, Vector3f& target, Vector3f& uparg) {
     //Gram¨CSchmidt process
-    Vector3f forward = (position - target).normalized();
+    Vector3f forward = (target - position).normalized();
     Vector3f side = (uparg.Cross(forward)).normalized();
     Vector3f up = forward.Cross(side);
 
@@ -271,19 +271,19 @@ Matrix4 Matrix4::ViewMatrix(Vector3f& position, Vector3f& target, Vector3f& upar
     worldToCam(0, 0) = side.x;
     worldToCam(0, 1) = side.y;
     worldToCam(0, 2) = side.z;
-    worldToCam(0, 3) = -side.Dot(position);
+    worldToCam(0, 3) = -position.x;
 
     //Second row
     worldToCam(1, 0) = up.x;
     worldToCam(1, 1) = up.y;
     worldToCam(1, 2) = up.z;
-    worldToCam(1, 3) = -up.Dot(position);
+    worldToCam(1, 3) = -position.y;
 
     //Third row
     worldToCam(2, 0) = forward.x;
     worldToCam(2, 1) = forward.y;
     worldToCam(2, 2) = forward.z;
-    worldToCam(2, 3) = -forward.Dot(position);
+    worldToCam(2, 3) = -position.z;
 
     //Fourth row
     worldToCam(3, 3) = 1;
@@ -297,7 +297,7 @@ Matrix4 Matrix4::ProjectionMatrix(float fov, float aspect, float near, float far
     projectionMat(0, 0) = (float)(fax / aspect);
     projectionMat(1, 1) = (float)(fax);
     projectionMat(2, 2) = far / (far - near);
-    projectionMat(3, 2) = -near * far / (far - near);
-    projectionMat(2, 3) = 1;
+    projectionMat(2, 3) = -near * far / (far - near);
+    projectionMat(3, 3) = 1;
     return projectionMat;
 }

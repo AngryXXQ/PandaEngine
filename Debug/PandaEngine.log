@@ -1,3 +1,8 @@
 ﻿  PandaEngine.cpp
-D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(112,1): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(43,37): warning C4305: “参数”: 从“double”到“T”截断
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(114,1): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
   PandaEngine.vcxproj -> D:\MyWork\MyFiles\PandaEngine\Debug\PandaEngine.exe

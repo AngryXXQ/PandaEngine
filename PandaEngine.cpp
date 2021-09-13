@@ -40,10 +40,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     Transform t;
     t.position = Vector3f(0,0,20);
-    //t.scale = Vector3f(0.5, 0.5, 0.5);
-    //RenderManager::getInstance()->AddModel("res/Death.FBX",t);
+    t.scale = Vector3f(0.2, 0.2, 0.2);
+    t.rotation = Vector3f(0,0,90);
+    RenderManager::getInstance()->AddModel("res/Death.FBX",t);
     //RenderManager::getInstance()->AddModel("res/Bear_01/Bear_01.fbx", t);
-    RenderManager::getInstance()->AddModel("res/Bat_01/Bat_01.fbx", t);
+    //t.rotation = Vector3f(0,0,90);
+    //RenderManager::getInstance()->AddModel("res/Bat_01/Bat_01.fbx", t);
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_PANDAENGINE));
 
@@ -173,11 +175,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             Vector3f offset(0, 0, 0);
             if (wParam == VK_DOWN)
             {
-                offset.z -= 1;
+                offset.y -= 1;
             }
             else if (wParam == VK_UP)
             {
-                offset.z += 1;
+                offset.y += 1;
             }
             else if (wParam == VK_LEFT)
             {
