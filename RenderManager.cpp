@@ -102,7 +102,7 @@ void RenderManager::Init(HWND hwnd,float w, float h)
 	viewportMatrix(1, 3) = height / 2;
 }
 
-//#define DRAW_LINE 1
+#define DRAW_LINE 1
 
 void RenderManager::Update()
 {
