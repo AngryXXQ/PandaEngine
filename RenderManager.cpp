@@ -92,10 +92,6 @@ void RenderManager::Init(HWND hwnd,float w, float h)
 	height = h;
 	initRenderManager(hwnd);
 	m_MainCamera = new Camera();
-	/*
-	width = 1;
-	height = 1;
-	*/
 	viewportMatrix(0, 0) = width / 2;
 	viewportMatrix(0, 3) = width / 2;
 	viewportMatrix(1, 1) = height / 2;

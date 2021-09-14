@@ -4,28 +4,28 @@ D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(55,38): warning C4305: “参数�
           [
               T=float
           ]
-D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(122,1): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
-D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(186,32): warning C4305: “-=”: 从“double”到“T”截断
+D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(123,1): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(187,32): warning C4305: “-=”: 从“double”到“T”截断
           with
           [
               T=float
           ]
-D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(190,32): warning C4305: “+=”: 从“double”到“T”截断
+D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(191,32): warning C4305: “+=”: 从“double”到“T”截断
           with
           [
               T=float
           ]
-D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(194,32): warning C4305: “-=”: 从“double”到“T”截断
+D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(195,32): warning C4305: “-=”: 从“double”到“T”截断
           with
           [
               T=float
           ]
-D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(198,32): warning C4305: “+=”: 从“double”到“T”截断
+D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(199,32): warning C4305: “+=”: 从“double”到“T”截断
           with
           [
               T=float
           ]
-D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(202,34): warning C4305: “+=”: 从“double”到“T”截断
+D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(203,34): warning C4305: “+=”: 从“double”到“T”截断
           with
           [
               T=float

@@ -271,19 +271,19 @@ Matrix4 Matrix4::ViewMatrix(Vector3f& position, Vector3f& target, Vector3f& upar
     worldToCam(0, 0) = side.x;
     worldToCam(0, 1) = side.y;
     worldToCam(0, 2) = side.z;
-    worldToCam(0, 3) = -position.x;
+    worldToCam(0, 3) = -side.Dot(position);
 
     //Second row
     worldToCam(1, 0) = up.x;
     worldToCam(1, 1) = up.y;
     worldToCam(1, 2) = up.z;
-    worldToCam(1, 3) = -position.y;
+    worldToCam(1, 3) = -up.Dot(position);
 
     //Third row
     worldToCam(2, 0) = forward.x;
     worldToCam(2, 1) = forward.y;
     worldToCam(2, 2) = forward.z;
-    worldToCam(2, 3) = -position.z;
+    worldToCam(2, 3) = -forward.Dot(position);
 
     //Fourth row
     worldToCam(3, 3) = 1;
