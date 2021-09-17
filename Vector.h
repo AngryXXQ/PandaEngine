@@ -132,3 +132,12 @@ struct Vector3
 
 typedef Vector3<float> Vector3f;
 typedef Vector3<int> Vector3Int;
+
+struct Vertex
+{
+	Vector3f vertex;   //顶点
+	Vector3f color;    //颜色
+	Vector3f uv[2];    //纹理坐标
+	Vector3f normal;   //法线
+	Vector3f tangent;  //切线
+};

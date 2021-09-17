@@ -14,5 +14,5 @@ public:
 public:
 	Transform modelTransform;
 	Matrix4 modelMatrix;
-	std::vector<std::vector<Vector3f>> vertexVector;
+	std::vector<std::vector<Vertex>> vertexVector;
 };

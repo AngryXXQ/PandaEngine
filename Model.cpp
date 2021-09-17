@@ -28,9 +28,9 @@ Matrix4 Model::GetModelTransform()
 
 bool Model::LoadModel(const char* modelName)
 {
-	if (ModelImportor::getInstance()->importModel(modelName))
+	if (ModelImportor::getInstance()->importModel(modelName, vertexVector))
 	{
-		vertexVector = ModelImportor::getInstance()->vertexVector;
+		return true;
 	}
-	return true;
+	return false;
 }

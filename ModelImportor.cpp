@@ -5,7 +5,6 @@ ModelImportor* ModelImportor::m_ModelImportor = NULL;
 ModelImportor::ModelImportor()
 {
 	numTabs = 0;
-    vertexVector.clear();
 }
 
 ModelImportor::~ModelImportor()
@@ -66,7 +65,7 @@ void ModelImportor::PrintAttribute(FbxNodeAttribute* pAttribute) {
 /**
  * Print a node, its attributes, and all its children recursively.
  */
-void ModelImportor::PrintNode(FbxNode* pNode) {
+void ModelImportor::PrintNode(FbxNode* pNode, std::vector<std::vector<Vertex>>& vertexDatas) {
     PrintTabs();
     const char* nodeName = pNode->GetName();
     FbxDouble3 translation = pNode->LclTranslation.Get();
@@ -88,11 +87,7 @@ void ModelImportor::PrintNode(FbxNode* pNode) {
         PrintAttribute(pNode->GetNodeAttributeByIndex(i));
     */
 
-    Vector3f vertex[3];
-    Vector3f color[3];
-    Vector3f uv[3][2];
-    Vector3f normal[3];
-    Vector3f tangent[3];
+    Vertex vertex[3];
     FbxMesh* pMesh = pNode->GetMesh();
     if (pMesh)
     {
@@ -104,26 +99,26 @@ void ModelImportor::PrintNode(FbxNode* pNode) {
             {
                 int ctrlPointIndex = pMesh->GetPolygonVertex(i, j);
                 // Read the vertex  
-                ReadVertex(pMesh, ctrlPointIndex, &vertex[j]);
+                ReadVertex(pMesh, ctrlPointIndex, &vertex[j].vertex);
 
                 // Read the color of each vertex  
-                ReadColor(pMesh, ctrlPointIndex, vertexCounter, &color[j]);
+                ReadColor(pMesh, ctrlPointIndex, vertexCounter, &vertex[j].color);
 
                 // Read the UV of each vertex  
                 for (int k = 0; k < 2; ++k)
                 {
-                    ReadUV(pMesh, ctrlPointIndex, pMesh->GetTextureUVIndex(i, j), k, &(uv[j][k]));
+                    ReadUV(pMesh, ctrlPointIndex, pMesh->GetTextureUVIndex(i, j), k, &(vertex[j].uv[k]));
                 }
 
                 // Read the normal of each vertex  
-                ReadNormal(pMesh, ctrlPointIndex, vertexCounter, &normal[j]);
+                ReadNormal(pMesh, ctrlPointIndex, vertexCounter, &vertex[j].normal);
 
                 // Read the tangent of each vertex  
-                ReadTangent(pMesh, ctrlPointIndex, vertexCounter, &tangent[j]);
+                ReadTangent(pMesh, ctrlPointIndex, vertexCounter, &vertex[j].tangent);
 
                 vertexCounter++;
             }
-            std::vector<Vector3f> temp;
+            std::vector<Vertex> temp;
             temp.clear();
             for (int k = 0; k < 3; ++k)
             {
@@ -131,14 +126,14 @@ void ModelImportor::PrintNode(FbxNode* pNode) {
             }
             if (temp.size() > 0)
             {
-                vertexVector.push_back(temp);
+                vertexDatas.push_back(temp);
             }
         }
     }
     
     // Recursively print the children.
     for (int j = 0; j < pNode->GetChildCount(); j++)
-        PrintNode(pNode->GetChild(j));
+        PrintNode(pNode->GetChild(j), vertexDatas);
 
     numTabs--;
     PrintTabs();
@@ -157,8 +152,7 @@ void ModelImportor::ReadVertex(FbxMesh* pMesh, int ctrlPointIndex, Vector3f* pVe
  * Main function - loads the hard-coded fbx file,
  * and prints its contents in an xml format to stdout.
  */
-int ModelImportor::importModel(const char* lFilename) {
-    vertexVector.clear();
+int ModelImportor::importModel(const char* lFilename, std::vector<std::vector<Vertex>>& vertexDatas) {
     // Initialize the SDK manager. This object handles all our memory management.
     FbxManager* lSdkManager = FbxManager::Create();
 
@@ -197,7 +191,7 @@ int ModelImportor::importModel(const char* lFilename) {
     FbxNode* lRootNode = lScene->GetRootNode();
     if (lRootNode) {
         for (int i = 0; i < lRootNode->GetChildCount(); i++)
-            PrintNode(lRootNode->GetChild(i));
+            PrintNode(lRootNode->GetChild(i), vertexDatas);
     }
     // Destroy the SDK manager and all the other objects it was handling.
     lSdkManager->Destroy();

@@ -19,13 +19,11 @@ public:
 		return m_ModelImportor;
 	}
 
-	void PrintNode(FbxNode* pNode);
-	int importModel(const char* lFilename);
+	void PrintNode(FbxNode* pNode, std::vector<std::vector<Vertex>>& vertexDatas);
+	int importModel(const char* lFilename,std::vector<std::vector<Vertex>>& vertexDatas);
 	void PrintAttribute(FbxNodeAttribute* pAttribute);
 	FbxString GetAttributeTypeName(FbxNodeAttribute::EType type);
 	void PrintTabs();
-
-	std::vector<std::vector<Vector3f>> vertexVector;
 
 	void ReadVertex(FbxMesh* pMesh, int ctrlPointIndex, Vector3f* pVertex);
 	void ReadColor(FbxMesh* pMesh, int ctrlPointIndex, int vertexCounter, Vector3f* pColor);

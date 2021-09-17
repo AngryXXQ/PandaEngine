@@ -126,10 +126,10 @@ void RenderManager::Update()
 			tM = viewportMatrix * tM;
 			for (int j = 0; j < m->vertexVector.size(); ++j)
 			{
-				std::vector<Vector3f> vlist = m->vertexVector[j];
-				Vector3f v0 = tM * vlist[0];
-				Vector3f v1 = tM * vlist[1];
-				Vector3f v2 = tM * vlist[2];
+				std::vector<Vertex> vlist = m->vertexVector[j];
+				Vector3f v0 = tM * vlist[0].vertex;
+				Vector3f v1 = tM * vlist[1].vertex;
+				Vector3f v2 = tM * vlist[2].vertex;
 #ifdef  DRAW_LINE
 				DrawLine(v0, v1, pcolor);
 				DrawLine(v1, v2, pcolor);
