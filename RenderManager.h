@@ -8,6 +8,7 @@
 #include <Windows.h>
 #include <gl/GL.h>
 #include <gl/GLU.h>
+#include "Shader.h"
 
 #pragma comment(lib,"opengl32.lib")
 #pragma comment(lib,"glu32.lib")
@@ -38,6 +39,7 @@ public:
 	void initRenderManager(HWND hwnd);
 	void ChangeCameraPos(Vector3f offset);
 	void RotateModels(Vector3f rot);
+	bool FaceCulling(Vector3f v0, Vector3f v1, Vector3f v2);//ÃæÌÞ³ý
 
 	void DrawLine(Vector3f v1, Vector3f v2, Color color);
 	void DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color color);
@@ -50,4 +52,5 @@ private:
 	float height;
 	Matrix4 viewportMatrix;
 	Buffer frameBuffer;
+	Shader shader;
 };

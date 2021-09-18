@@ -37,24 +37,32 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         return FALSE;
     }
-
+    
     Transform t;
-    //t.position = Vector3f(-1,0,20);
-    //t.scale = Vector3f(0.2, 0.2, 0.2);
-    //t.rotation = Vector3f(0,0,90);
-    //RenderManager::getInstance()->AddModel("res/Death.FBX",t);
+    t.position = Vector3f(-1,0,20);
+    t.scale = Vector3f(0.2, 0.2, 0.2);
+    t.rotation = Vector3f(0,0,90);
+    RenderManager::getInstance()->AddModel("res/Death.FBX",t);
+    
+
     /*
-    RenderManager::getInstance()->AddModel("res/Bear_01/Bear_01.fbx", t);
-    //t.rotation = Vector3f(0,0,90);
+    Transform t0;
+    RenderManager::getInstance()->AddModel("res/Bear_01/Bear_01.fbx", t0);
+    */
+
+    /*
     Transform t1;
     t1.position = Vector3f(1, 0, 10);
     RenderManager::getInstance()->AddModel("res/Bat_01/Bat_01.fbx", t1);
     */
+
+    /*
     Transform t2;
     t2.position = Vector3f(0, 5, 1000);
     t2.scale = Vector3f(0.1, 0.1, 0.1);
     t2.rotation = Vector3f(90, 0, 0);
     RenderManager::getInstance()->AddModel("res/Unitychan/Unitychan.fbx", t2);
+    */
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_PANDAENGINE));
 

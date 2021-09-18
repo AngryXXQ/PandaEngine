@@ -156,6 +156,7 @@
     <ClInclude Include="PandaEngine.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
@@ -167,6 +168,7 @@
     <ClCompile Include="ModelImportor.cpp" />
     <ClCompile Include="PandaEngine.cpp" />
     <ClCompile Include="RenderManager.cpp" />
+    <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PandaEngine.rc" />

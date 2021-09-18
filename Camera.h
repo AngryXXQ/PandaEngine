@@ -12,7 +12,7 @@ public:
 	Matrix4 projectionMatrix;
 
 	void Update();
-
+	Vector3f dir;
 private:
 	Vector3f target;
 	Vector3f up;

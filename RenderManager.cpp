@@ -110,6 +110,9 @@ void RenderManager::Update()
 	{
 		return;
 	}
+	shader.V = m_MainCamera->viewMatrix;
+	shader.P = m_MainCamera->projectionMatrix;
+
 	Color pcolor(255, 255, 255, 255);
 	Color tcolor(125, 125, 125, 255);
 	frameBuffer.ClearBuffer(tcolor);
@@ -120,16 +123,23 @@ void RenderManager::Update()
 		Model* m = render_queue.front();
 		if (m)
 		{
-			Matrix4 modelMatrix = m->GetModelTransform();
-			Matrix4 tM = m_MainCamera->viewMatrix * modelMatrix;
-			tM = m_MainCamera->projectionMatrix * tM;
-			tM = viewportMatrix * tM;
+			shader.M = m->GetModelTransform();
+			shader.MVP = shader.P * shader.V * shader.M;
 			for (int j = 0; j < m->vertexVector.size(); ++j)
 			{
 				std::vector<Vertex> vlist = m->vertexVector[j];
-				Vector3f v0 = tM * vlist[0].vertex;
-				Vector3f v1 = tM * vlist[1].vertex;
-				Vector3f v2 = tM * vlist[2].vertex;
+				Vertex vertex0 = shader.VertexShader(vlist[0]);
+				Vertex vertex1 = shader.VertexShader(vlist[1]);
+				Vertex vertex2 = shader.VertexShader(vlist[2]);
+
+				Vector3f v0 = viewportMatrix * vertex0.vertex;
+				Vector3f v1 = viewportMatrix * vertex1.vertex;
+				Vector3f v2 = viewportMatrix * vertex2.vertex;
+
+				if (FaceCulling(v0, v1, v2))
+				{
+					continue;
+				}
 #ifdef  DRAW_LINE
 				DrawLine(v0, v1, pcolor);
 				DrawLine(v1, v2, pcolor);
@@ -147,6 +157,16 @@ void RenderManager::Update()
 	glDrawPixels(1000, 800, GL_RGBA, GL_UNSIGNED_BYTE, frameBuffer.buffer.data());
 	glFlush();
 	SwapBuffers(hdc);
+}
+
+//面剔除
+bool RenderManager::FaceCulling(Vector3f v0, Vector3f v1, Vector3f v2)
+{
+	Vector3f v01 = v1 - v0;
+	Vector3f v02 = v2 - v0;
+	Vector3f f = v01.Cross(v02);
+	float t = f.Dot(m_MainCamera->dir);
+	return t <= 0;
 }
 
 // 绘制三角形
