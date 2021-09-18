@@ -41,7 +41,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     Transform t;
     t.position = Vector3f(-1,0,20);
     t.scale = Vector3f(0.2, 0.2, 0.2);
-    t.rotation = Vector3f(0,0,90);
+    t.rotation = Vector3f(90,0,0);
     RenderManager::getInstance()->AddModel("res/Death.FBX",t);
     
 

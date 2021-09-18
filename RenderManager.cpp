@@ -98,7 +98,7 @@ void RenderManager::Init(HWND hwnd,float w, float h)
 	viewportMatrix(1, 3) = height / 2;
 }
 
-#define DRAW_LINE 1
+//#define DRAW_LINE 1
 
 void RenderManager::Update()
 {
@@ -112,7 +112,7 @@ void RenderManager::Update()
 	}
 	shader.V = m_MainCamera->viewMatrix;
 	shader.P = m_MainCamera->projectionMatrix;
-
+	int count = 0;
 	Color pcolor(255, 255, 255, 255);
 	Color tcolor(125, 125, 125, 255);
 	frameBuffer.ClearBuffer(tcolor);
@@ -132,14 +132,15 @@ void RenderManager::Update()
 				Vertex vertex1 = shader.VertexShader(vlist[1]);
 				Vertex vertex2 = shader.VertexShader(vlist[2]);
 
+				if (FaceCulling(vertex0.vertex, vertex1.vertex, vertex2.vertex))
+				{
+					++count;
+					continue;
+				}
+
 				Vector3f v0 = viewportMatrix * vertex0.vertex;
 				Vector3f v1 = viewportMatrix * vertex1.vertex;
 				Vector3f v2 = viewportMatrix * vertex2.vertex;
-
-				if (FaceCulling(v0, v1, v2))
-				{
-					continue;
-				}
 #ifdef  DRAW_LINE
 				DrawLine(v0, v1, pcolor);
 				DrawLine(v1, v2, pcolor);
