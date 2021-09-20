@@ -284,7 +284,7 @@ void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color co
 	}
 	else if (dxOld == 0 && dyOld != 0)
 	{
-		mz = dzOld / dyOld;
+		mz = (float)dzOld / (float)dyOld;
 		if (mz < 0)
 		{
 			mz = -mz;
@@ -315,7 +315,7 @@ void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color co
 	}
 	else if (dxOld != 0 && dyOld == 0)
 	{
-		mz = dzOld / dxOld;
+		mz = (float)dzOld / (float)dxOld;
 		if (mz < 0)
 		{
 			mz = -mz;
@@ -351,7 +351,7 @@ void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color co
 	int yi = y1;
 	int pi = ddy - dxNew;
 
-	mz = dzOld / dxOld;
+	mz = (float)dzOld / (float)dxOld;
 	if (mz < 0)
 	{
 		mz = -mz;
@@ -543,7 +543,7 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 	}
 	else if (dxOld == 0 && dyOld != 0)
 	{
-		mz = dzOld / dyOld;
+		mz = (float)dzOld / (float)dyOld;
 		if (mz < 0)
 		{
 			mz = -mz;
@@ -579,7 +579,7 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 	}
 	else if (dxOld != 0 && dyOld == 0)
 	{
-		mz = dzOld / dxOld;
+		mz = (float)dzOld / (float)dxOld;
 		if (mz < 0)
 		{
 			mz = -mz;
@@ -620,7 +620,7 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 	int yi = y1;
 	int pi = ddy - dxNew;
 
-	mz = dzOld / dxOld;
+	mz = (float)dzOld / (float)dxOld;
 	if (mz < 0)
 	{
 		mz = -mz;
