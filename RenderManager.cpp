@@ -98,7 +98,7 @@ void RenderManager::Init(HWND hwnd,float w, float h)
 	viewportMatrix(1, 3) = height / 2;
 }
 
-#define DRAW_LINE 1
+//#define DRAW_LINE 1
 
 void RenderManager::Update()
 {
@@ -175,86 +175,20 @@ bool RenderManager::FaceCulling(Vector3f v0, Vector3f v1, Vector3f v2)
 
 // 绘制三角形
 void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color color) {
-	int x, y, rem = 0;
 	int x1 = v1.x;
 	int y1 = v1.y;
 	int x2 = v2.x;
 	int y2 = v2.y;
-	if (x1 == x2 && y1 == y2) {
-		frameBuffer.WriteBuffer(x1, y1, color);
-		DrawLine(v0, v1, color);
-	}
-	else if (x1 == x2) {
-		int inc = (y1 <= y2) ? 1 : -1;
-		for (y = y1; y != y2; y += inc)
-		{
-			frameBuffer.WriteBuffer(x1, y, color);
-			DrawLine(v0, Vector3f(x1, y, 0), color);
-		}
-		frameBuffer.WriteBuffer(x2, y2, color);
-		DrawLine(v0, Vector3f(x2, y2, 0), color);
-	}
-	else if (y1 == y2) {
-		int inc = (x1 <= x2) ? 1 : -1;
-		for (x = x1; x != x2; x += inc)
-		{
-			frameBuffer.WriteBuffer(x, y1, color);
-			DrawLine(v0, Vector3f(x, y1, 0), color);
-		}
-		frameBuffer.WriteBuffer(x2, y2, color);
-		DrawLine(v0, Vector3f(x2, y2, 0), color);
-	}
-	else {
-		int dx = (x1 < x2) ? x2 - x1 : x1 - x2;
-		int dy = (y1 < y2) ? y2 - y1 : y1 - y2;
-		if (dx >= dy) {
-			if (x2 < x1) x = x1, y = y1, x1 = x2, y1 = y2, x2 = x, y2 = y;
-			for (x = x1, y = y1; x <= x2; x++) {
-				frameBuffer.WriteBuffer(x, y, color);
-				DrawLine(v0, Vector3f(x, y, 0), color);
-				rem += dy;
-				if (rem >= dx) {
-					rem -= dx;
-					y += (y2 >= y1) ? 1 : -1;
-					frameBuffer.WriteBuffer(x, y, color);
-					DrawLine(v0, Vector3f(x, y, 0), color);
-				}
-			}
-			frameBuffer.WriteBuffer(x2, y2, color);
-			DrawLine(v0, Vector3f(x2, y2, 0), color);
-		}
-		else {
-			if (y2 < y1) x = x1, y = y1, x1 = x2, y1 = y2, x2 = x, y2 = y;
-			for (x = x1, y = y1; y <= y2; y++) {
-				frameBuffer.WriteBuffer(x, y, color);
-				DrawLine(v0, Vector3f(x, y, 0), color);
-				rem += dx;
-				if (rem >= dy) {
-					rem -= dy;
-					x += (x2 >= x1) ? 1 : -1;
-					frameBuffer.WriteBuffer(x, y, color);
-					DrawLine(v0, Vector3f(x, y, 0), color);
-				}
-			}
-			frameBuffer.WriteBuffer(x2, y2, color);
-			DrawLine(v0, Vector3f(x2, y2, 0), color);
-		}
-	}
-}
-
-
-// Bresenham算法绘制线段
-void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
-	int x1 = v1.x;
-	int y1 = v1.y;
-	int x2 = v2.x;
-	int y2 = v2.y;
-
 	int dxOld = x2 - x1;
 	int dyOld = y2 - y1;
 	int dxNew = x2 - x1;
 	int dyNew = y2 - y1;
 	float m = 1;
+
+	int z1 = v1.z;
+	int z2 = v2.z;
+	int dzOld = z2 - z1;
+	float mz = 1;
 
 	if (dxOld > 0 && dyOld > 0)
 	{
@@ -340,11 +274,21 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 	}
 	else if (dxOld == 0 && dyOld == 0)
 	{
-		frameBuffer.WriteBuffer(x1, y1, color);
+		float z = v1.z;
+		if (v2.z < v1.z)
+		{
+			z = v2.z;
+		}
+		DrawLine(v0, Vector3f(x1, y1, z), color);
 		return;
 	}
 	else if (dxOld == 0 && dyOld != 0)
 	{
+		mz = dzOld / dyOld;
+		if (mz < 0)
+		{
+			mz = -mz;
+		}
 		if (dyOld > 0)
 		{
 			x1 = v1.x;
@@ -363,13 +307,19 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 		int yi = y1;
 		while (yi < y2)
 		{
-			frameBuffer.WriteBuffer(xi, yi, color);
+			float z = mz * yi;
+			DrawLine(v0, Vector3f(xi, yi, z), color);
 			++yi;
 		}
 		return;
 	}
 	else if (dxOld != 0 && dyOld == 0)
 	{
+		mz = dzOld / dxOld;
+		if (mz < 0)
+		{
+			mz = -mz;
+		}
 		if (dxOld > 0)
 		{
 			x1 = v1.x;
@@ -388,7 +338,8 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 		int yi = y1;
 		while (xi < x2)
 		{
-			frameBuffer.WriteBuffer(xi, yi, color);
+			float z = mz * xi;
+			DrawLine(v0, Vector3f(xi, yi, z), color);
 			++xi;
 		}
 		return;
@@ -399,6 +350,12 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 	int xi = x1;
 	int yi = y1;
 	int pi = ddy - dxNew;
+
+	mz = dzOld / dxOld;
+	if (mz < 0)
+	{
+		mz = -mz;
+	}
 
 	while (xi != x2 + 1)
 	{
@@ -417,44 +374,361 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 		{
 			if (m > 0 && m <= 1)
 			{
-				frameBuffer.WriteBuffer(xi, yi, color);
+				float z = mz * xi;
+				DrawLine(v0, Vector3f(xi, yi, z), color);
 			}
 			else if (m > 1)
 			{
-				frameBuffer.WriteBuffer(yi, xi, color);
+				float z = mz * yi;
+				DrawLine(v0, Vector3f(yi, xi, z), color);
 			}
 		}
 		else if (dxOld > 0 && dyOld < 0)
 		{
 			if ((m > 0 && m <= 1))
 			{
-				frameBuffer.WriteBuffer(xi, -yi, color);
+				float z = mz * xi;
+				DrawLine(v0, Vector3f(xi, -yi, z), color);
 			}
 			else if (m > 1)
 			{
-				frameBuffer.WriteBuffer(yi, -xi, color);
+				float z = mz * yi;
+				DrawLine(v0, Vector3f(yi, -xi, z), color);
 			}
 		}
 		else if (dxOld < 0 && dyOld > 0)
 		{
 			if ((m > 0 && m <= 1))
 			{
-				frameBuffer.WriteBuffer(-xi, yi, color);
+				float z = mz * -xi;
+				DrawLine(v0, Vector3f(-xi, yi, z), color);
 			}
 			else if (m > 1)
 			{
-				frameBuffer.WriteBuffer(-yi, xi, color);
+				float z = mz * -yi;
+				DrawLine(v0, Vector3f(-yi, xi, z), color);
 			}
 		}
 		else if (dxOld < 0 && dyOld < 0)
 		{
 			if (m > 0 && m <= 1)
 			{
-				frameBuffer.WriteBuffer(-xi, -yi, color);
+				float z = mz * -xi;
+				DrawLine(v0, Vector3f(-xi, -yi, z), color);
 			}
 			else if (m > 1)
 			{
-				frameBuffer.WriteBuffer(-yi, -xi, color);
+				float z = mz * -yi;
+				DrawLine(v0, Vector3f(-yi, -xi, z), color);
+			}
+		}
+		++xi;
+	}
+}
+
+// Bresenham算法绘制线段
+void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
+	int x1 = v1.x;
+	int y1 = v1.y;
+	int x2 = v2.x;
+	int y2 = v2.y;
+
+	int dxOld = x2 - x1;
+	int dyOld = y2 - y1;
+	int dxNew = x2 - x1;
+	int dyNew = y2 - y1;
+	float m = 1;
+
+	int z1 = v1.z;
+	int z2 = v2.z;
+	int dzOld = z2 - z1;
+	float mz = 1;
+
+	if (dxOld > 0 && dyOld > 0)
+	{
+		m = (float)dyOld / (float)dxOld;
+		if (m > 0 && m <= 1)
+		{
+		}
+		else if (m > 1)
+		{
+			x1 = v1.y;
+			y1 = v1.x;
+			x2 = v2.y;
+			y2 = v2.x;
+			dxNew = x2 - x1;
+			dyNew = y2 - y1;
+		}
+	}
+	else if (dxOld > 0 && dyOld < 0)
+	{
+		m = (float)(-dyOld) / (float)dxOld;
+		if ((m > 0 && m <= 1))
+		{
+			x1 = v1.x;
+			y1 = -v1.y;
+			x2 = v2.x;
+			y2 = -v2.y;
+			dxNew = x2 - x1;
+			dyNew = y2 - y1;
+		}
+		else if (m > 1)
+		{
+			x1 = -v1.y;
+			y1 = v1.x;
+			x2 = -v2.y;
+			y2 = v2.x;
+			dxNew = x2 - x1;
+			dyNew = y2 - y1;
+		}
+	}
+	else if (dxOld < 0 && dyOld > 0)
+	{
+		m = (float)dyOld / (float)(-dxOld);
+		if ((m > 0 && m <= 1))
+		{
+			x1 = -v1.x;
+			y1 = v1.y;
+			x2 = -v2.x;
+			y2 = v2.y;
+			dxNew = x2 - x1;
+			dyNew = y2 - y1;
+		}
+		else if (m > 1)
+		{
+			x1 = v1.y;
+			y1 = -v1.x;
+			x2 = v2.y;
+			y2 = -v2.x;
+			dxNew = x2 - x1;
+			dyNew = y2 - y1;
+		}
+	}
+	else if (dxOld < 0 && dyOld < 0)
+	{
+		m = (float)(-dyOld) / (float)(-dxOld);
+		if (m > 0 && m <= 1)
+		{
+			x1 = -v1.x;
+			y1 = -v1.y;
+			x2 = -v2.x;
+			y2 = -v2.y;
+			dxNew = x2 - x1;
+			dyNew = y2 - y1;
+		}
+		else if (m > 1)
+		{
+			x1 = -v1.y;
+			y1 = -v1.x;
+			x2 = -v2.y;
+			y2 = -v2.x;
+			dxNew = x2 - x1;
+			dyNew = y2 - y1;
+		}
+	}
+	else if (dxOld == 0 && dyOld == 0)
+	{
+		float z = v1.z;
+		if (v2.z < v1.z)
+		{
+			z = v2.z;
+		}
+		float zb = frameBuffer.GetZBuffer(x1, y1);
+		if (zb > z)
+		{
+			frameBuffer.WriteZBuffer(x1, y1, z);
+			frameBuffer.WriteBuffer(x1, y1, color);
+		}
+		return;
+	}
+	else if (dxOld == 0 && dyOld != 0)
+	{
+		mz = dzOld / dyOld;
+		if (mz < 0)
+		{
+			mz = -mz;
+		}
+		if (dyOld > 0)
+		{
+			x1 = v1.x;
+			y1 = v1.y;
+			x2 = v2.x;
+			y2 = v2.y;
+		}
+		else
+		{
+			x1 = v2.x;
+			y1 = v2.y;
+			x2 = v1.x;
+			y2 = v1.y;
+		}
+		int xi = x1;
+		int yi = y1;
+		while (yi < y2)
+		{
+			float z = mz * yi;
+			float zb = frameBuffer.GetZBuffer(xi, yi);
+			if (zb > z)
+			{
+				frameBuffer.WriteZBuffer(xi, yi, z);
+				frameBuffer.WriteBuffer(xi, yi, color);
+			}
+			++yi;
+		}
+		return;
+	}
+	else if (dxOld != 0 && dyOld == 0)
+	{
+		mz = dzOld / dxOld;
+		if (mz < 0)
+		{
+			mz = -mz;
+		}
+		if (dxOld > 0)
+		{
+			x1 = v1.x;
+			y1 = v1.y;
+			x2 = v2.x;
+			y2 = v2.y;
+		}
+		else
+		{
+			x1 = v2.x;
+			y1 = v2.y;
+			x2 = v1.x;
+			y2 = v1.y;
+		}
+		int xi = x1;
+		int yi = y1;
+		while (xi < x2)
+		{
+			float z = mz * xi;
+			float zb = frameBuffer.GetZBuffer(xi, yi);
+			if (zb > z)
+			{
+				frameBuffer.WriteZBuffer(xi, yi, z);
+				frameBuffer.WriteBuffer(xi, yi, color);
+			}
+			++xi;
+		}
+		return;
+	}
+
+	int ddx = 2 * dxNew;
+	int ddy = 2 * dyNew;
+	int xi = x1;
+	int yi = y1;
+	int pi = ddy - dxNew;
+
+	mz = dzOld / dxOld;
+	if (mz < 0)
+	{
+		mz = -mz;
+	}
+
+	while (xi != x2 + 1)
+	{
+		if (pi < 0)
+		{
+			pi = pi + ddy;
+			yi = yi;
+		}
+		else
+		{
+			pi = pi + ddy - ddx;
+			++yi;
+		}
+		//将素(x, y)涂色
+		if (dxOld > 0 && dyOld > 0)
+		{
+			if (m > 0 && m <= 1)
+			{
+				float z = mz * xi;
+				float zb = frameBuffer.GetZBuffer(xi, yi);
+				if (zb > z)
+				{
+					frameBuffer.WriteZBuffer(xi, yi, z);
+					frameBuffer.WriteBuffer(xi, yi, color);
+				}
+			}
+			else if (m > 1)
+			{
+				float z = mz * yi;
+				float zb = frameBuffer.GetZBuffer(yi, xi);
+				if (zb > z)
+				{
+					frameBuffer.WriteZBuffer(yi, xi, z);
+					frameBuffer.WriteBuffer(yi, xi, color);
+				}
+			}
+		}
+		else if (dxOld > 0 && dyOld < 0)
+		{
+			if ((m > 0 && m <= 1))
+			{
+				float z = mz * xi;
+				float zb = frameBuffer.GetZBuffer(xi, -yi);
+				if (zb > z)
+				{
+					frameBuffer.WriteZBuffer(xi, -yi, z);
+					frameBuffer.WriteBuffer(xi, -yi, color);
+				}
+			}
+			else if (m > 1)
+			{
+				float z = mz * yi;
+				float zb = frameBuffer.GetZBuffer(yi, -xi);
+				if (zb > z)
+				{
+					frameBuffer.WriteZBuffer(yi, -xi, z);
+					frameBuffer.WriteBuffer(yi, -xi, color);
+				}
+			}
+		}
+		else if (dxOld < 0 && dyOld > 0)
+		{
+			if ((m > 0 && m <= 1))
+			{
+				float z = mz * -xi;
+				float zb = frameBuffer.GetZBuffer(-xi, yi);
+				if (zb > z)
+				{
+					frameBuffer.WriteZBuffer(-xi, yi, z);
+					frameBuffer.WriteBuffer(-xi, yi, color);
+				}
+			}
+			else if (m > 1)
+			{
+				float z = mz * -yi;
+				float zb = frameBuffer.GetZBuffer(-yi, xi);
+				if (zb > z)
+				{
+					frameBuffer.WriteZBuffer(-yi, xi, z);
+					frameBuffer.WriteBuffer(-yi, xi, color);
+				}
+			}
+		}
+		else if (dxOld < 0 && dyOld < 0)
+		{
+			if (m > 0 && m <= 1)
+			{
+				float z = mz * -xi;
+				float zb = frameBuffer.GetZBuffer(-xi, -yi);
+				if (zb > z)
+				{
+					frameBuffer.WriteZBuffer(-xi, -yi, z);
+					frameBuffer.WriteBuffer(-xi, -yi, color);
+				}
+			}
+			else if (m > 1)
+			{
+				float z = mz * -yi;
+				float zb = frameBuffer.GetZBuffer(-yi, -xi);
+				if (zb > z)
+				{
+					frameBuffer.WriteZBuffer(-yi, -xi, z);
+					frameBuffer.WriteBuffer(-yi, -xi, color);
+				}
 			}
 		}
 		++xi;
