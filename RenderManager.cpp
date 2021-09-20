@@ -98,7 +98,7 @@ void RenderManager::Init(HWND hwnd,float w, float h)
 	viewportMatrix(1, 3) = height / 2;
 }
 
-//#define DRAW_LINE 1
+#define DRAW_LINE 1
 
 void RenderManager::Update()
 {
@@ -110,12 +110,14 @@ void RenderManager::Update()
 	{
 		return;
 	}
+
 	shader.V = m_MainCamera->viewMatrix;
 	shader.P = m_MainCamera->projectionMatrix;
 	int count = 0;
 	Color pcolor(255, 255, 255, 255);
 	Color tcolor(125, 125, 125, 255);
 	frameBuffer.ClearBuffer(tcolor);
+
 	std::queue<Model*> render_queue = model_queue;
 	int model_count = render_queue.size();
 	for (int i = 0; i < model_count; ++i)
@@ -155,6 +157,7 @@ void RenderManager::Update()
 		}
 		render_queue.pop();
 	}
+
 	glDrawPixels(1000, 800, GL_RGBA, GL_UNSIGNED_BYTE, frameBuffer.buffer.data());
 	glFlush();
 	SwapBuffers(hdc);
@@ -240,97 +243,222 @@ void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color co
 }
 
 
-// 绘制线段
+// Bresenham算法绘制线段
 void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
-	int x, y, rem = 0;
 	int x1 = v1.x;
 	int y1 = v1.y;
 	int x2 = v2.x;
 	int y2 = v2.y;
-	if (x1 == x2 && y1 == y2) {
-		frameBuffer.WriteBuffer(x1, y1, color);
-	}
-	else if (x1 == x2) {
-		int inc = (y1 <= y2) ? 1 : -1;
-		for (y = y1; y != y2; y += inc)
-		{
-			frameBuffer.WriteBuffer(x1, y, color);
-		}
-		frameBuffer.WriteBuffer(x2, y2, color);
-	}
-	else if (y1 == y2) {
-		int inc = (x1 <= x2) ? 1 : -1;
-		for (x = x1; x != x2; x += inc)
-		{
-			frameBuffer.WriteBuffer(x, y1, color);
-		}
-		frameBuffer.WriteBuffer(x2, y2, color);
-	}
-	else {
-		int dx = (x1 < x2) ? x2 - x1 : x1 - x2;
-		int dy = (y1 < y2) ? y2 - y1 : y1 - y2;
-		if (dx >= dy) {
-			if (x2 < x1) x = x1, y = y1, x1 = x2, y1 = y2, x2 = x, y2 = y;
-			for (x = x1, y = y1; x <= x2; x++) {
-				frameBuffer.WriteBuffer(x, y, color);
-				rem += dy;
-				if (rem >= dx) {
-					rem -= dx;
-					y += (y2 >= y1) ? 1 : -1;
-					frameBuffer.WriteBuffer(x, y, color);
-				}
-			}
-			frameBuffer.WriteBuffer(x2, y2, color);
-		}
-		else {
-			if (y2 < y1) x = x1, y = y1, x1 = x2, y1 = y2, x2 = x, y2 = y;
-			for (x = x1, y = y1; y <= y2; y++) {
-				frameBuffer.WriteBuffer(x, y, color);
-				rem += dx;
-				if (rem >= dy) {
-					rem -= dy;
-					x += (x2 >= x1) ? 1 : -1;
-					frameBuffer.WriteBuffer(x, y, color);
-				}
-			}
-			frameBuffer.WriteBuffer(x2, y2, color);
-		}
-	}
 
-	/*
-	int dx = (int)v2.x - (int)v1.x;
-	int dy = (int)v2.y - (int)v1.y;
-	int d = dx - 2 * dy;
-	int incrE = -2 * dy;
-	int incrNE = 2 * (dx - dy);
-	int x = v1.x;
-	int y = v1.y;
-	frameBuffer.WriteBuffer(x, y, color);
-	while (x < v2.x)
+	int dxOld = x2 - x1;
+	int dyOld = y2 - y1;
+	int dxNew = x2 - x1;
+	int dyNew = y2 - y1;
+	float m = 1;
+
+	if (dxOld > 0 && dyOld > 0)
 	{
-		if (d > 0)
+		m = (float)dyOld / (float)dxOld;
+		if (m > 0 && m <= 1)
 		{
-			d += incrE;
+		}
+		else if (m > 1)
+		{
+			x1 = v1.y;
+			y1 = v1.x;
+			x2 = v2.y;
+			y2 = v2.x;
+			dxNew = x2 - x1;
+			dyNew = y2 - y1;
+		}
+	}
+	else if (dxOld > 0 && dyOld < 0)
+	{
+		m = (float)(-dyOld) / (float)dxOld;
+		if ((m > 0 && m <= 1))
+		{
+			x1 = v1.x;
+			y1 = -v1.y;
+			x2 = v2.x;
+			y2 = -v2.y;
+			dxNew = x2 - x1;
+			dyNew = y2 - y1;
+		}
+		else if (m > 1)
+		{
+			x1 = -v1.y;
+			y1 = v1.x;
+			x2 = -v2.y;
+			y2 = v2.x;
+			dxNew = x2 - x1;
+			dyNew = y2 - y1;
+		}
+	}
+	else if (dxOld < 0 && dyOld > 0)
+	{
+		m = (float)dyOld / (float)(-dxOld);
+		if ((m > 0 && m <= 1))
+		{
+			x1 = -v1.x;
+			y1 = v1.y;
+			x2 = -v2.x;
+			y2 = v2.y;
+			dxNew = x2 - x1;
+			dyNew = y2 - y1;
+		}
+		else if (m > 1)
+		{
+			x1 = v1.y;
+			y1 = -v1.x;
+			x2 = v2.y;
+			y2 = -v2.x;
+			dxNew = x2 - x1;
+			dyNew = y2 - y1;
+		}
+	}
+	else if (dxOld < 0 && dyOld < 0)
+	{
+		m = (float)(-dyOld) / (float)(-dxOld);
+		if (m > 0 && m <= 1)
+		{
+			x1 = -v1.x;
+			y1 = -v1.y;
+			x2 = -v2.x;
+			y2 = -v2.y;
+			dxNew = x2 - x1;
+			dyNew = y2 - y1;
+		}
+		else if (m > 1)
+		{
+			x1 = -v1.y;
+			y1 = -v1.x;
+			x2 = -v2.y;
+			y2 = -v2.x;
+			dxNew = x2 - x1;
+			dyNew = y2 - y1;
+		}
+	}
+	else if (dxOld == 0 && dyOld == 0)
+	{
+		frameBuffer.WriteBuffer(x1, y1, color);
+		return;
+	}
+	else if (dxOld == 0 && dyOld != 0)
+	{
+		if (dyOld > 0)
+		{
+			x1 = v1.x;
+			y1 = v1.y;
+			x2 = v2.x;
+			y2 = v2.y;
 		}
 		else
 		{
-			d += incrNE;
-			y++;
-			x++;
+			x1 = v2.x;
+			y1 = v2.y;
+			x2 = v1.x;
+			y2 = v1.y;
 		}
-		frameBuffer.WriteBuffer(x, y, color);
+		int xi = x1;
+		int yi = y1;
+		while (yi < y2)
+		{
+			frameBuffer.WriteBuffer(xi, yi, color);
+			++yi;
+		}
+		return;
+	}
+	else if (dxOld != 0 && dyOld == 0)
+	{
+		if (dxOld > 0)
+		{
+			x1 = v1.x;
+			y1 = v1.y;
+			x2 = v2.x;
+			y2 = v2.y;
+		}
+		else
+		{
+			x1 = v2.x;
+			y1 = v2.y;
+			x2 = v1.x;
+			y2 = v1.y;
+		}
+		int xi = x1;
+		int yi = y1;
+		while (xi < x2)
+		{
+			frameBuffer.WriteBuffer(xi, yi, color);
+			++xi;
+		}
+		return;
 	}
 
-	float dx = v2.x - v1.x;
-	float dy = v2.y - v1.y;
-	float m = dy / dx;
-	float y = v1.y;
-	for (int x = v1.x; x <= v2.x; ++x)
+	int ddx = 2 * dxNew;
+	int ddy = 2 * dyNew;
+	int xi = x1;
+	int yi = y1;
+	int pi = ddy - dxNew;
+
+	while (xi != x2 + 1)
 	{
-		frameBuffer.WriteBuffer(x, (int)(y + 0.5), color);
-		y += m;
+		if (pi < 0)
+		{
+			pi = pi + ddy;
+			yi = yi;
+		}
+		else
+		{
+			pi = pi + ddy - ddx;
+			++yi;
+		}
+		//将素(x, y)涂色
+		if (dxOld > 0 && dyOld > 0)
+		{
+			if (m > 0 && m <= 1)
+			{
+				frameBuffer.WriteBuffer(xi, yi, color);
+			}
+			else if (m > 1)
+			{
+				frameBuffer.WriteBuffer(yi, xi, color);
+			}
+		}
+		else if (dxOld > 0 && dyOld < 0)
+		{
+			if ((m > 0 && m <= 1))
+			{
+				frameBuffer.WriteBuffer(xi, -yi, color);
+			}
+			else if (m > 1)
+			{
+				frameBuffer.WriteBuffer(yi, -xi, color);
+			}
+		}
+		else if (dxOld < 0 && dyOld > 0)
+		{
+			if ((m > 0 && m <= 1))
+			{
+				frameBuffer.WriteBuffer(-xi, yi, color);
+			}
+			else if (m > 1)
+			{
+				frameBuffer.WriteBuffer(-yi, xi, color);
+			}
+		}
+		else if (dxOld < 0 && dyOld < 0)
+		{
+			if (m > 0 && m <= 1)
+			{
+				frameBuffer.WriteBuffer(-xi, -yi, color);
+			}
+			else if (m > 1)
+			{
+				frameBuffer.WriteBuffer(-yi, -xi, color);
+			}
+		}
+		++xi;
 	}
-	*/
 }
 
 void RenderManager::Destory()
