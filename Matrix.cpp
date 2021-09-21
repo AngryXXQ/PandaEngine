@@ -296,8 +296,8 @@ Matrix4 Matrix4::ProjectionMatrix(float fov, float aspect, float near, float far
     float fax = 1.0f / (float)tan(fov * 0.5f);
     projectionMat(0, 0) = (float)(fax / aspect);
     projectionMat(1, 1) = (float)(fax);
-    projectionMat(2, 2) = far / (far - near);
-    projectionMat(2, 3) = -near * far / (far - near);
-    projectionMat(3, 3) = 1;
+    projectionMat(2, 2) = -(far+near) / (far - near);
+    projectionMat(2, 3) = -2 * near * far / (far - near);
+    projectionMat(3, 2) = 1;
     return projectionMat;
 }
