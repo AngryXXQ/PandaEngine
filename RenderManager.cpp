@@ -33,7 +33,7 @@ void RenderManager::RotateModels(Vector3f rot)
 		Model* m = render_queue.front();
 		if (m)
 		{
-			m->modelTransform.rotation += rot;
+			m->modelTransform.rotation += rot * 10;
 		}
 		render_queue.pop();
 		break;
@@ -561,12 +561,7 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 		{
 			z = v2.z;
 		}
-		float zb = frameBuffer.GetZBuffer(x1, y1);
-		if (zb > z)
-		{
-			frameBuffer.WriteZBuffer(x1, y1, z);
-			frameBuffer.WriteBuffer(x1, y1, color);
-		}
+		DrawPixel(x1, y1, z, color, false);
 		return;
 	}
 	else if (dxOld == 0 && dyOld != 0)
@@ -595,12 +590,7 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 		while (yi < y2)
 		{
 			float z = mz * yi;
-			float zb = frameBuffer.GetZBuffer(xi, yi);
-			if (zb > z)
-			{
-				frameBuffer.WriteZBuffer(xi, yi, z);
-				frameBuffer.WriteBuffer(xi, yi, color);
-			}
+			DrawPixel(xi, yi, mz, color, false);
 			++yi;
 		}
 		return;
@@ -709,9 +699,13 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 	}
 }
 
-void RenderManager::DrawPixel(int x, int y, float mz, Color color)
+void RenderManager::DrawPixel(int x, int y, float mz, Color color, bool recomputez)
 {
-	float z = mz * x;
+	float z = mz;
+	if (recomputez)
+	{
+		z = mz* x;
+	}
 	float zb = frameBuffer.GetZBuffer(x, y);
 	if (zb > z)
 	{
