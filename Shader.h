@@ -13,6 +13,7 @@ public:
 	Matrix4 M;
 	Matrix4 V;
 	Matrix4 P;
+	Matrix4 MV;
 	Matrix4 MVP;
 };
 

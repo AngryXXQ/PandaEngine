@@ -222,6 +222,9 @@ Matrix4 Matrix4::ScaleMatrix(float x, float y, float z)
 //参数x y z为分别绕X Y Z轴选择的角度
 Matrix4 Matrix4::RotateMatrix(float x, float y, float z)
 {
+    x = M_PI * x / 180;
+    y = M_PI * y / 180;
+    z = M_PI * z / 180;
     Matrix4 temp = UnitMatrix4();
     float cosx = cos(x);
     float sinx = sin(x);
@@ -291,13 +294,22 @@ Matrix4 Matrix4::ViewMatrix(Vector3f& position, Vector3f& target, Vector3f& upar
     return worldToCam;
 }
 
-Matrix4 Matrix4::ProjectionMatrix(float fov, float aspect, float near, float far) {
+Matrix4 Matrix4::ProjectionMatrix(float fov, float aspect, float near, float far, float r, float t) {
     Matrix4 projectionMat;
     float fax = 1.0f / (float)tan(fov * 0.5f);
     projectionMat(0, 0) = (float)(fax / aspect);
     projectionMat(1, 1) = (float)(fax);
-    projectionMat(2, 2) = -(far+near) / (far - near);
-    projectionMat(2, 3) = -2 * near * far / (far - near);
+    projectionMat(2, 2) = far / (far - near);
+    projectionMat(2, 3) = -near * far / (far - near);
     projectionMat(3, 2) = 1;
+
+    /*
+    projectionMat(0, 0) = near;
+    projectionMat(1, 1) = near;
+    projectionMat(2, 2) = far / (far - near);
+    projectionMat(2, 3) = -near * far / (far - near);
+    projectionMat(3, 2) = 1;
+    */
+    
     return projectionMat;
 }

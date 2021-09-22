@@ -36,6 +36,7 @@ void Buffer::ClearBuffer(Color color)
 		*(buf + i + 2) = color.g;
 		*(buf + i + 3) = color.a;
 	}
+	zbuffer.assign(width * height, 1.0);
 }
 
 void Buffer::WriteBuffer(const int& x, const int& y, const Color& color)

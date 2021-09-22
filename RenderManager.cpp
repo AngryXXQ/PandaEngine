@@ -36,6 +36,7 @@ void RenderManager::RotateModels(Vector3f rot)
 			m->modelTransform.rotation += rot;
 		}
 		render_queue.pop();
+		break;
 	}
 }
 
@@ -92,6 +93,7 @@ void RenderManager::Init(HWND hwnd,float w, float h)
 	height = h;
 	initRenderManager(hwnd);
 	m_MainCamera = new Camera();
+	m_MainCamera->SetAspect(width, height);
 	viewportMatrix(0, 0) = width / 2;
 	viewportMatrix(0, 3) = width / 2;
 	viewportMatrix(1, 1) = height / 2;
@@ -122,27 +124,41 @@ void RenderManager::Update()
 	int model_count = render_queue.size();
 	for (int i = 0; i < model_count; ++i)
 	{
+		pcolor.g -= i * 100;
+		if (pcolor.g < 0)
+		{
+			pcolor.g = 0;
+		}
 		Model* m = render_queue.front();
 		if (m)
 		{
 			shader.M = m->GetModelTransform();
-			shader.MVP = shader.P * shader.V * shader.M;
+			shader.MV = shader.V * shader.M;
+			shader.MVP = shader.P * shader.MV;
 			for (int j = 0; j < m->vertexVector.size(); ++j)
 			{
 				std::vector<Vertex> vlist = m->vertexVector[j];
-				Vertex vertex0 = shader.VertexShader(vlist[0]);
-				Vertex vertex1 = shader.VertexShader(vlist[1]);
-				Vertex vertex2 = shader.VertexShader(vlist[2]);
+				Vertex v[3];
+				for (int k = 0; k < 3; ++k)
+				{
+					v[k] = shader.VertexShader(vlist[k]);
+				}
 
-				if (FaceCulling(vertex0.vertex, vertex1.vertex, vertex2.vertex))
+				if (FaceCulling(v[0].vertex, v[1].vertex, v[2].vertex))
 				{
 					++count;
 					continue;
 				}
 
-				Vector3f v0 = viewportMatrix * vertex0.vertex;
-				Vector3f v1 = viewportMatrix * vertex1.vertex;
-				Vector3f v2 = viewportMatrix * vertex2.vertex;
+				for (int m = 0; m < 3; ++m)
+				{
+					PerspectiveDivision(v[m].vertex);
+					ViewPortMapping(v[m].vertex);
+				}
+
+				Vector3f v0 = v[0].vertex;
+				Vector3f v1 = v[1].vertex;
+				Vector3f v2 = v[2].vertex;
 #ifdef  DRAW_LINE
 				DrawLine(v0, v1, pcolor);
 				DrawLine(v1, v2, pcolor);
@@ -161,6 +177,18 @@ void RenderManager::Update()
 	glDrawPixels(1000, 800, GL_RGBA, GL_UNSIGNED_BYTE, frameBuffer.buffer.data());
 	glFlush();
 	SwapBuffers(hdc);
+}
+
+void RenderManager::PerspectiveDivision(Vector3f& v)
+{
+	float d = 1 / v.w;
+	v = v * d;
+	v.w = 1;
+}
+
+void RenderManager::ViewPortMapping(Vector3f& v)
+{
+	v = viewportMatrix * v;
 }
 
 //ÃæÌÞ³ý
@@ -602,13 +630,7 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 		int yi = y1;
 		while (xi < x2)
 		{
-			float z = mz * xi;
-			float zb = frameBuffer.GetZBuffer(xi, yi);
-			if (zb > z)
-			{
-				frameBuffer.WriteZBuffer(xi, yi, z);
-				frameBuffer.WriteBuffer(xi, yi, color);
-			}
+			DrawPixel(xi, yi, mz, color);
 			++xi;
 		}
 		return;
@@ -643,95 +665,58 @@ void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
 		{
 			if (m > 0 && m <= 1)
 			{
-				float z = mz * xi;
-				float zb = frameBuffer.GetZBuffer(xi, yi);
-				if (zb > z)
-				{
-					frameBuffer.WriteZBuffer(xi, yi, z);
-					frameBuffer.WriteBuffer(xi, yi, color);
-				}
+				DrawPixel(xi, yi, mz, color);
 			}
 			else if (m > 1)
 			{
-				float z = mz * yi;
-				float zb = frameBuffer.GetZBuffer(yi, xi);
-				if (zb > z)
-				{
-					frameBuffer.WriteZBuffer(yi, xi, z);
-					frameBuffer.WriteBuffer(yi, xi, color);
-				}
+				DrawPixel(yi, xi, mz, color);
 			}
 		}
 		else if (dxOld > 0 && dyOld < 0)
 		{
 			if ((m > 0 && m <= 1))
 			{
-				float z = mz * xi;
-				float zb = frameBuffer.GetZBuffer(xi, -yi);
-				if (zb > z)
-				{
-					frameBuffer.WriteZBuffer(xi, -yi, z);
-					frameBuffer.WriteBuffer(xi, -yi, color);
-				}
+				DrawPixel(xi, -yi, mz, color);
 			}
 			else if (m > 1)
 			{
-				float z = mz * yi;
-				float zb = frameBuffer.GetZBuffer(yi, -xi);
-				if (zb > z)
-				{
-					frameBuffer.WriteZBuffer(yi, -xi, z);
-					frameBuffer.WriteBuffer(yi, -xi, color);
-				}
+				DrawPixel(yi, -xi, mz, color);
 			}
 		}
 		else if (dxOld < 0 && dyOld > 0)
 		{
 			if ((m > 0 && m <= 1))
 			{
-				float z = mz * -xi;
-				float zb = frameBuffer.GetZBuffer(-xi, yi);
-				if (zb > z)
-				{
-					frameBuffer.WriteZBuffer(-xi, yi, z);
-					frameBuffer.WriteBuffer(-xi, yi, color);
-				}
+				DrawPixel(-xi, yi, mz, color);
 			}
 			else if (m > 1)
 			{
-				float z = mz * -yi;
-				float zb = frameBuffer.GetZBuffer(-yi, xi);
-				if (zb > z)
-				{
-					frameBuffer.WriteZBuffer(-yi, xi, z);
-					frameBuffer.WriteBuffer(-yi, xi, color);
-				}
+				DrawPixel(-yi, xi, mz, color);
 			}
 		}
 		else if (dxOld < 0 && dyOld < 0)
 		{
 			if (m > 0 && m <= 1)
 			{
-				float z = mz * -xi;
-				float zb = frameBuffer.GetZBuffer(-xi, -yi);
-				if (zb > z)
-				{
-					frameBuffer.WriteZBuffer(-xi, -yi, z);
-					frameBuffer.WriteBuffer(-xi, -yi, color);
-				}
+				DrawPixel(-xi, -yi, mz, color);
 			}
 			else if (m > 1)
 			{
-				float z = mz * -yi;
-				float zb = frameBuffer.GetZBuffer(-yi, -xi);
-				if (zb > z)
-				{
-					frameBuffer.WriteZBuffer(-yi, -xi, z);
-					frameBuffer.WriteBuffer(-yi, -xi, color);
-				}
+				DrawPixel(-yi, -xi, mz, color);
 			}
 		}
 		++xi;
+	}
+}
+
+void RenderManager::DrawPixel(int x, int y, float mz, Color color)
+{
+	float z = mz * x;
+	float zb = frameBuffer.GetZBuffer(x, y);
+	if (zb > z)
+	{
+		frameBuffer.WriteZBuffer(x, y, z);
+		frameBuffer.WriteBuffer(x, y, color);
 	}
 }
 

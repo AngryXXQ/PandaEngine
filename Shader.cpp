@@ -5,6 +5,7 @@ Shader::Shader()
 	M.UnitMatrix4();
 	V.UnitMatrix4();
 	P.UnitMatrix4();
+	MV.UnitMatrix4();
 	MVP.UnitMatrix4();
 }
 

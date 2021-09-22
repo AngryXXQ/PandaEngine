@@ -39,16 +39,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
     
     Transform t;
-    t.position = Vector3f(-1,0,20);
-    t.scale = Vector3f(0.2, 0.2, 0.2);
-    t.rotation = Vector3f(90,0,0);
+    t.position = Vector3f(0,-10,50);
+    t.rotation = Vector3f(-90,90, 0);
     RenderManager::getInstance()->AddModel("res/Death.FBX",t);
     
 
-    /*
     Transform t0;
+    t0.position = Vector3f(0, 0, 20);
     RenderManager::getInstance()->AddModel("res/Bear_01/Bear_01.fbx", t0);
-    */
 
     /*
     Transform t1;
@@ -188,27 +186,61 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_KEYDOWN:
         {
+            float detal = 1;
             Vector3f rotation(0, 0, 0);
             Vector3f offset(0, 0, 0);
             if (wParam == VK_DOWN)
             {
-                offset.y -= 0.1;
+                offset.z -= detal;
             }
             else if (wParam == VK_UP)
             {
-                offset.y += 0.1;
+                offset.z += detal;
             }
             else if (wParam == VK_LEFT)
             {
-                offset.x -= 0.1;
+                offset.x -= detal;
             }
             else if (wParam == VK_RIGHT)
             {
-                offset.x += 0.1;
+                offset.x += detal;
             }
-            else if (wParam == VK_SPACE)
+            else if (wParam == VK_NUMPAD7)
             {
-                rotation.y += 0.1;
+                offset.y += detal;
+            }
+            else if (wParam == VK_NUMPAD8)
+            {
+                offset.y -= detal;
+            }
+            else if (wParam == VK_NUMPAD1)
+            {
+                rotation.x += detal;
+                RenderManager::getInstance()->RotateModels(rotation);
+            }
+            else if (wParam == VK_NUMPAD4)
+            {
+                rotation.x -= detal;
+                RenderManager::getInstance()->RotateModels(rotation);
+            }
+            else if (wParam == VK_NUMPAD2)
+            {
+                rotation.y += detal;
+                RenderManager::getInstance()->RotateModels(rotation);
+            }
+            else if (wParam == VK_NUMPAD5)
+            {
+                rotation.y -= detal;
+                RenderManager::getInstance()->RotateModels(rotation);
+            }
+            else if (wParam == VK_NUMPAD3)
+            {
+                rotation.z += detal;
+                RenderManager::getInstance()->RotateModels(rotation);
+            }
+            else if (wParam == VK_NUMPAD6)
+            {
+                rotation.z -= detal;
                 RenderManager::getInstance()->RotateModels(rotation);
             }
             RenderManager::getInstance()->ChangeCameraPos(offset);

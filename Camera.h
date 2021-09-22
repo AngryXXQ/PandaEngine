@@ -11,6 +11,7 @@ public:
 	Matrix4 viewMatrix;
 	Matrix4 projectionMatrix;
 
+	void SetAspect(float w,float h);
 	void Update();
 	Vector3f dir;
 private:
@@ -21,4 +22,6 @@ private:
 	float aspect;
 	float znear;
 	float zfar;
+	float width;
+	float height;
 };

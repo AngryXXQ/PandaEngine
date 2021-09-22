@@ -43,6 +43,9 @@ public:
 
 	void DrawLine(Vector3f v1, Vector3f v2, Color color);
 	void DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color color);
+	void PerspectiveDivision(Vector3f& v);
+	void ViewPortMapping(Vector3f& v);
+	void DrawPixel(int x, int y, float z, Color color);
 private:
 	static RenderManager* m_RenderManager;
 	Camera* m_MainCamera;
