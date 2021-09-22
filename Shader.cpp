@@ -19,3 +19,10 @@ Vertex Shader::VertexShader(Vertex v)
 	v.vertex = MVP * v.vertex;
 	return v;
 }
+
+Color Shader::FragmentShader(Vertex v)
+{
+	Color color(255, 255, 255, 255);
+
+	return color;
+}

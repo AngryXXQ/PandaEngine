@@ -9,6 +9,7 @@ public:
 
 	Vertex VertexShader(Vertex v);
 
+	Color FragmentShader(Vertex v);
 public:
 	Matrix4 M;
 	Matrix4 V;

@@ -710,7 +710,10 @@ void RenderManager::DrawPixel(int x, int y, float mz, Color color, bool recomput
 	if (zb > z)
 	{
 		frameBuffer.WriteZBuffer(x, y, z);
-		frameBuffer.WriteBuffer(x, y, color);
+		Vertex v;
+		v.vertex = Vector3f(x, y, z);
+		Color c = shader.FragmentShader(v);
+		frameBuffer.WriteBuffer(x, y, c);
 	}
 }
 
