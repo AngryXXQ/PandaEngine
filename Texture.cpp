@@ -23,10 +23,11 @@ void Texture::LoadTexture(const std::string & Path) {
 }
 
 Vector3f Texture::Sample2D(Vector3f & texcoord) {
-	//GL_REPEAT
-	float x = texcoord.x - (float)floor(texcoord.x);
-	float y = texcoord.y - (float)floor(texcoord.y);
-	return GetColor(x * (width - 1), y * (height - 1));
+	int x = (int)(texcoord.x * width - 0.5f) % width;
+	int y = (int)(texcoord.y * height - 0.5f) % height;
+	x = x < 0 ? width + x : x;
+	y = y < 0 ? height + y : y;
+	return GetColor(x, y);
 }
 
 Vector3f Texture::GetColor(int x, int y) {
