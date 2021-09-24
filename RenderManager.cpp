@@ -79,10 +79,10 @@ void RenderManager::DrawPoint(Vector3f p)
 	glEnd();
 }
 
-void RenderManager::AddModel(const char* model_name,Transform t)
+void RenderManager::AddModel(const char* model_name, const char* tex_path, Transform t)
 {
 	Model* mod = new Model();
-	mod->LoadModel(model_name);
+	mod->LoadModel(model_name, tex_path);
 	mod->SetModelTransform(t);
 	model_queue.push(mod);
 }
@@ -132,6 +132,7 @@ void RenderManager::Update()
 		Model* m = render_queue.front();
 		if (m)
 		{
+			shader.SetTexture(m->texturePath);
 			shader.M = m->GetModelTransform();
 			shader.MV = shader.V * shader.M;
 			shader.MVP = shader.P * shader.MV;
@@ -156,17 +157,15 @@ void RenderManager::Update()
 					ViewPortMapping(v[m].vertex);
 				}
 
-				Vector3f v0 = v[0].vertex;
-				Vector3f v1 = v[1].vertex;
-				Vector3f v2 = v[2].vertex;
 #ifdef  DRAW_LINE
-				DrawLine(v0, v1, pcolor);
-				DrawLine(v1, v2, pcolor);
-				DrawLine(v2, v0, pcolor);
+				DrawLine(v[0], v[1], pcolor);
+				DrawLine(v[1], v[2], pcolor);
+				DrawLine(v[2], v[0], pcolor);
 #endif //  DRAW_LINE
 
 #ifndef DRAW_LINE
-				DrawTriangle(v0, v1, v2, pcolor);
+				//DrawTriangle(v[0], v[1], v[2], pcolor);
+				ScanLineTriangle(v[0], v[1], v[2]);
 #endif // !DRAW_LINE
 
 			}
@@ -202,7 +201,11 @@ bool RenderManager::FaceCulling(Vector3f v0, Vector3f v1, Vector3f v2)
 }
 
 // 绘制三角形
-void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color color) {
+void RenderManager::DrawTriangle(Vertex vt0, Vertex vt1, Vertex vt2, Color color) {
+	Vector3f v0 = vt0.vertex;
+	Vector3f v1 = vt1.vertex;
+	Vector3f v2 = vt2.vertex;
+
 	int x1 = v1.x;
 	int y1 = v1.y;
 	int x2 = v2.x;
@@ -302,12 +305,14 @@ void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color co
 	}
 	else if (dxOld == 0 && dyOld == 0)
 	{
+		Vertex tvt = vt1;
 		float z = v1.z;
 		if (v2.z < v1.z)
 		{
 			z = v2.z;
+			tvt = vt2;
 		}
-		DrawLine(v0, Vector3f(x1, y1, z), color);
+		DrawLine(vt0, tvt, color);
 		return;
 	}
 	else if (dxOld == 0 && dyOld != 0)
@@ -336,7 +341,9 @@ void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color co
 		while (yi < y2)
 		{
 			float z = mz * yi;
-			DrawLine(v0, Vector3f(xi, yi, z), color);
+			Vertex tvt;
+			tvt.vertex = Vector3f(xi, yi, z);
+			DrawLine(vt0, tvt, color);
 			++yi;
 		}
 		return;
@@ -367,7 +374,9 @@ void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color co
 		while (xi < x2)
 		{
 			float z = mz * xi;
-			DrawLine(v0, Vector3f(xi, yi, z), color);
+			Vertex tvt;
+			tvt.vertex = Vector3f(xi, yi, z);
+			DrawLine(vt0, tvt, color);
 			++xi;
 		}
 		return;
@@ -403,12 +412,16 @@ void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color co
 			if (m > 0 && m <= 1)
 			{
 				float z = mz * xi;
-				DrawLine(v0, Vector3f(xi, yi, z), color);
+				Vertex tvt;
+				tvt.vertex = Vector3f(xi, yi, z);
+				DrawLine(vt0, tvt, color);
 			}
 			else if (m > 1)
 			{
 				float z = mz * yi;
-				DrawLine(v0, Vector3f(yi, xi, z), color);
+				Vertex tvt;
+				tvt.vertex = Vector3f(yi, xi, z);
+				DrawLine(vt0, tvt, color);
 			}
 		}
 		else if (dxOld > 0 && dyOld < 0)
@@ -416,12 +429,16 @@ void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color co
 			if ((m > 0 && m <= 1))
 			{
 				float z = mz * xi;
-				DrawLine(v0, Vector3f(xi, -yi, z), color);
+				Vertex tvt;
+				tvt.vertex = Vector3f(xi, -yi, z);
+				DrawLine(vt0, tvt, color);
 			}
 			else if (m > 1)
 			{
 				float z = mz * yi;
-				DrawLine(v0, Vector3f(yi, -xi, z), color);
+				Vertex tvt;
+				tvt.vertex = Vector3f(yi, -xi, z);
+				DrawLine(vt0, tvt, color);
 			}
 		}
 		else if (dxOld < 0 && dyOld > 0)
@@ -429,12 +446,16 @@ void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color co
 			if ((m > 0 && m <= 1))
 			{
 				float z = mz * -xi;
-				DrawLine(v0, Vector3f(-xi, yi, z), color);
+				Vertex tvt;
+				tvt.vertex = Vector3f(-xi, yi, z);
+				DrawLine(vt0, tvt, color);
 			}
 			else if (m > 1)
 			{
 				float z = mz * -yi;
-				DrawLine(v0, Vector3f(-yi, xi, z), color);
+				Vertex tvt;
+				tvt.vertex = Vector3f(-yi, xi, z);
+				DrawLine(vt0, tvt, color);
 			}
 		}
 		else if (dxOld < 0 && dyOld < 0)
@@ -442,12 +463,16 @@ void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color co
 			if (m > 0 && m <= 1)
 			{
 				float z = mz * -xi;
-				DrawLine(v0, Vector3f(-xi, -yi, z), color);
+				Vertex tvt;
+				tvt.vertex = Vector3f(-xi, -yi, z);
+				DrawLine(vt0, tvt, color);
 			}
 			else if (m > 1)
 			{
 				float z = mz * -yi;
-				DrawLine(v0, Vector3f(-yi, -xi, z), color);
+				Vertex tvt;
+				tvt.vertex = Vector3f(-yi, -xi, z);
+				DrawLine(vt0, tvt, color);
 			}
 		}
 		++xi;
@@ -455,7 +480,10 @@ void RenderManager::DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color co
 }
 
 // Bresenham算法绘制线段
-void RenderManager::DrawLine(Vector3f v1,Vector3f v2, Color color) {
+void RenderManager::DrawLine(Vertex vt1, Vertex vt2, Color color) {
+	Vector3f v1 = vt1.vertex;
+	Vector3f v2 = vt2.vertex;
+
 	int x1 = v1.x;
 	int y1 = v1.y;
 	int x2 = v2.x;
@@ -714,6 +742,123 @@ void RenderManager::DrawPixel(int x, int y, float mz, Color color, bool recomput
 		v.vertex = Vector3f(x, y, z);
 		Color c = shader.FragmentShader(v);
 		frameBuffer.WriteBuffer(x, y, c);
+	}
+}
+
+Vector3f RenderManager::LerpA(Vector3f& v1, Vector3f& v2, float factor) {
+	float minusfactor = 1.0f - factor;
+	Vector3f vt1 = Vector3f(v1.x * minusfactor, v1.y * minusfactor, v1.z * minusfactor);
+	Vector3f vt2 = Vector3f(v2.x * factor, v2.y * factor, v2.z * factor);
+	return vt1 + vt2;
+}
+
+Vertex RenderManager::lerp(Vertex& v1, Vertex& v2, float& factor) {
+	Vertex result;
+	result.vertex = LerpA(v1.vertex, v2.vertex, factor);
+	result.color = LerpA(v1.color, v2.color, factor);
+	result.normal = LerpA(v1.normal, v2.normal, factor);
+	result.uv[0] = LerpA(v1.uv[0], v2.uv[0], factor);
+	result.tangent = LerpA(v1.tangent, v2.tangent, factor);
+	return result;
+}
+
+//扫描线填充算法
+//对任意三角形，分为上下两个平底三角形填充
+void RenderManager::ScanLineTriangle(Vertex& v1, Vertex& v2, Vertex& v3) {
+	std::vector<Vertex> arr = { v1,v2,v3 };
+	if (arr[0].vertex.y > arr[1].vertex.y) {
+		Vertex tmp = arr[0];
+		arr[0] = arr[1];
+		arr[1] = tmp;
+	}
+	if (arr[1].vertex.y > arr[2].vertex.y) {
+		Vertex tmp = arr[1];
+		arr[1] = arr[2];
+		arr[2] = tmp;
+	}
+	if (arr[0].vertex.y > arr[1].vertex.y) {
+		Vertex tmp = arr[0];
+		arr[0] = arr[1];
+		arr[1] = tmp;
+	}
+	//arr[0] 在最下面  arr[2]在最上面
+	//中间跟上面的相等，是底三角形
+	if (arr[1].vertex.y == arr[2].vertex.y) {
+		DownTriangle(arr[1], arr[2], arr[0]);
+	}//顶三角形
+	else if (arr[1].vertex.y == arr[0].vertex.y) {
+		UpTriangle(arr[1], arr[0], arr[2]);
+	}
+	else {
+		//插值求出中间点对面的那个点，划分为两个新的三角形
+		float weight = (arr[2].vertex.y - arr[1].vertex.y) / (arr[2].vertex.y - arr[0].vertex.y);
+		Vertex newEdge = lerp(arr[2], arr[0], weight);
+		UpTriangle(arr[1], newEdge, arr[2]);
+		DownTriangle(arr[1], newEdge, arr[0]);
+	}
+}
+
+void RenderManager::UpTriangle(Vertex& v1, Vertex& v2, Vertex& v3) {
+	Vertex left, right, top;
+	left = v1.vertex.x > v2.vertex.x ? v2 : v1;
+	right = v1.vertex.x > v2.vertex.x ? v1 : v2;
+	top = v3;
+	left.vertex.x = int(left.vertex.x);
+	int dy = top.vertex.y - left.vertex.y;
+	int nowY = top.vertex.y;
+	//从上往下插值
+	for (int i = dy; i >= 0; i--) {
+		float weight = 0;
+		if (dy != 0) {
+			weight = (float)i / dy;
+		}
+		Vertex newLeft = lerp(left, top, weight);
+		Vertex newRight = lerp(right, top, weight);
+		newLeft.vertex.x = int(newLeft.vertex.x);
+		newRight.vertex.x = int(newRight.vertex.x + 0.5);
+		newLeft.vertex.y = newRight.vertex.y = nowY;
+		ScanLine(newLeft, newRight);
+		nowY--;
+	}
+}
+void RenderManager::DownTriangle(Vertex& v1, Vertex& v2, Vertex& v3) {
+	Vertex left, right, bottom;
+	left = v1.vertex.x > v2.vertex.x ? v2 : v1;
+	right = v1.vertex.x > v2.vertex.x ? v1 : v2;
+	bottom = v3;
+	int dy = left.vertex.y - bottom.vertex.y;
+	int nowY = left.vertex.y;
+	//从上往下插值
+	for (int i = 0; i < dy; i++) {
+		float weight = 0;
+		if (dy != 0) {
+			weight = (float)i / dy;
+		}
+		Vertex newLeft = lerp(left, bottom, weight);
+		Vertex newRight = lerp(right, bottom, weight);
+		newLeft.vertex.x = int(newLeft.vertex.x);
+		newRight.vertex.x = int(newRight.vertex.x + 0.5);
+		newLeft.vertex.y = newRight.vertex.y = nowY;
+		ScanLine(newLeft, newRight);
+		nowY--;
+	}
+}
+void RenderManager::ScanLine(Vertex& left, Vertex& right) {
+	int length = right.vertex.x - left.vertex.x;
+	float weight = 0;
+	for (int i = 0; i < length; i++) {
+		weight = (float)i / length;
+		Vertex v = lerp(left, right, weight);
+		v.vertex.x = left.vertex.x + i;
+		v.vertex.y = left.vertex.y;
+
+		float zb = frameBuffer.GetZBuffer(v.vertex.x, v.vertex.y);
+		if (zb > v.vertex.z)
+		{
+			frameBuffer.WriteZBuffer(v.vertex.x, v.vertex.y, v.vertex.z);
+			Color c = shader.FragmentShader(v);
+			frameBuffer.WriteBuffer(v.vertex.x, v.vertex.y, c);
+		}
 	}
 }
 

@@ -37,16 +37,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         return FALSE;
     }
-    
+
     Transform t;
     t.position = Vector3f(0,-10,50);
     t.rotation = Vector3f(-90,90, 0);
-    RenderManager::getInstance()->AddModel("res/Death.FBX",t);
+    RenderManager::getInstance()->AddModel("res/Death.FBX","res/Death.fbm/DEATHWING2.tga",t);
     
-
+    /*
     Transform t0;
-    t0.position = Vector3f(0, 0, 20);
-    RenderManager::getInstance()->AddModel("res/Bear_01/Bear_01.fbx", t0);
+    t0.position = Vector3f(0, 0, 10);
+    t0.rotation = Vector3f(0, 0, 180);
+    RenderManager::getInstance()->AddModel("res/Bear_01/Bear_01.fbx", "res/Bear_01/Bear_Body.png", t0);
+    */
 
     /*
     Transform t1;
@@ -60,6 +62,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     t2.scale = Vector3f(0.1, 0.1, 0.1);
     t2.rotation = Vector3f(90, 0, 0);
     RenderManager::getInstance()->AddModel("res/Unitychan/Unitychan.fbx", t2);
+    */
+
+    /*
+    Transform t3;
+    t3.position = Vector3f(0, 0, 10);
+    t3.rotation = Vector3f(0, 0, 180);
+    RenderManager::getInstance()->AddModel("res/Xiukai_skill01/Xiukai_skill01.fbx", "res/Xiukai_skill01/Xiukai_01_Body.png", t3);
     */
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_PANDAENGINE));

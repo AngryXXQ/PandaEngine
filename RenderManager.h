@@ -13,7 +13,6 @@
 #pragma comment(lib,"opengl32.lib")
 #pragma comment(lib,"glu32.lib")
 
-
 class RenderManager
 {
 public:
@@ -35,17 +34,24 @@ public:
 	void Init(HWND hwnd, float w, float h);
 	void Update();
 	void Destory();
-	void AddModel(const char* model_name, Transform t);
+	void AddModel(const char* model_name, const char* tex_path, Transform t);
 	void initRenderManager(HWND hwnd);
 	void ChangeCameraPos(Vector3f offset);
 	void RotateModels(Vector3f rot);
 	bool FaceCulling(Vector3f v0, Vector3f v1, Vector3f v2);//ÃæÌÞ³ý
 
-	void DrawLine(Vector3f v1, Vector3f v2, Color color);
-	void DrawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Color color);
+	void DrawLine(Vertex v1, Vertex v2, Color color);
+	void DrawTriangle(Vertex v0, Vertex v1, Vertex v2, Color color);
 	void PerspectiveDivision(Vector3f& v);
 	void ViewPortMapping(Vector3f& v);
 	void DrawPixel(int x, int y, float z, Color color, bool recomputez = true);
+
+	void ScanLineTriangle(Vertex& v1, Vertex& v2, Vertex& v3);
+	void UpTriangle(Vertex& v1, Vertex& v2, Vertex& v3);
+	void DownTriangle(Vertex& v1, Vertex& v2, Vertex& v3);
+	void ScanLine(Vertex& left, Vertex& right);
+	Vector3f LerpA(Vector3f& v1, Vector3f& v2, float factor);
+	Vertex lerp(Vertex& v1, Vertex& v2, float& factor);
 private:
 	static RenderManager* m_RenderManager;
 	Camera* m_MainCamera;

@@ -1,3 +1,2 @@
-E:\PandaEngine\Debug\PandaEngine.exe
 D:\MyWork\MyFiles\PandaEngine\Debug\PandaEngine.exe
 D:\MyWork\MyFiles\PandaEngine\Debug\PandaEngine.pdb

@@ -7,6 +7,7 @@ Model::Model()
 	modelTransform.rotation = Vector3f(0, 0, 0);
 	modelTransform.scale = Vector3f(1, 1, 1);
 	modelMatrix = modelMatrix.ModelMatrix(modelTransform);
+	texturePath = "";
 }
 
 Model::~Model()
@@ -26,9 +27,10 @@ Matrix4 Model::GetModelTransform()
 	return modelMatrix;
 }
 
-bool Model::LoadModel(const char* modelName)
+bool Model::LoadModel(std::string modelName, std::string texpath)
 {
-	if (ModelImportor::getInstance()->importModel(modelName, vertexVector))
+	texturePath = texpath;
+	if (ModelImportor::getInstance()->importModel(modelName.c_str(), vertexVector))
 	{
 		return true;
 	}

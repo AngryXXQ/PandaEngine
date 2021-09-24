@@ -43,6 +43,14 @@ struct Vector3
 		w = 1;
 	}
 
+	Vector3(T xval, T yval, T zval, T wval)
+	{
+		x = xval;
+		y = yval;
+		z = zval;
+		w = wval;
+	}
+
 	Vector3& PerspectiveDivide()
 	{
 		x /= w;
