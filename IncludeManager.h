@@ -28,3 +28,11 @@ struct Color
 		a = c4;
 	}
 };
+
+enum LightType
+{
+	NONE = 0,
+	DIRECTION_LIGHT,//平行光
+	AMBIENT_LIGHT,  //环境光
+	POINT_LIGHT     //点光源
+};
