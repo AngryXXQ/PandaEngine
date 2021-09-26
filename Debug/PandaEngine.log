@@ -1,3 +1,38 @@
-﻿  PandaEngine.cpp
-D:\MyWork\MyFiles\PandaEngine\PandaEngine.cpp(138,1): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+﻿  Shader.cpp
+D:\MyWork\MyFiles\PandaEngine\Shader.cpp(61,15): warning C4244: “=”: 从“T”转换到“unsigned int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\Shader.cpp(62,15): warning C4244: “=”: 从“T”转换到“unsigned int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\Shader.cpp(63,15): warning C4244: “=”: 从“T”转换到“unsigned int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\Shader.cpp(64,15): warning C4244: “=”: 从“T”转换到“unsigned int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\Vector.h(121,14): warning C4244: “return”: 从“double”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\Vector.h(120): message : 在编译 类 模板 成员函数“T Vector3<T>::length(void)”时
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\Shader.cpp(36): message : 查看对正在编译的函数 模板 实例化“T Vector3<T>::length(void)”的引用
+          with
+          [
+              T=float
+          ]
+D:\MyWork\MyFiles\PandaEngine\Vector.h(146): message : 查看对正在编译的 类 模板 实例化“Vector3<float>”的引用
   PandaEngine.vcxproj -> D:\MyWork\MyFiles\PandaEngine\Debug\PandaEngine.exe

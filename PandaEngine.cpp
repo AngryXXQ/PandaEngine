@@ -42,7 +42,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     t.position = Vector3f(0,-10,50);
     t.rotation = Vector3f(-90,90, 0);
     RenderManager::getInstance()->AddModel("res/Death.FBX","res/Death.fbm/DEATHWING2.tga",t);
-    
+
     /*
     Transform t0;
     t0.position = Vector3f(0, 0, 10);

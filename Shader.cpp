@@ -8,6 +8,8 @@ Shader::Shader()
 	MV.UnitMatrix4();
 	MVP.UnitMatrix4();
 	tex = new Texture();
+	lightDir = Vector3f(0, 0, 0);
+	viewDir = Vector3f(0, 0, 0);
 }
 
 Shader::~Shader()
@@ -23,10 +25,39 @@ Vertex Shader::VertexShader(Vertex v)
 
 Color Shader::FragmentShader(Vertex v)
 {
+	if (light)
+	{
+		lightDir = light->pos - v.vertex;
+	}
+	if (mainCamera)
+	{
+		viewDir = mainCamera->position - v.vertex;
+	}
+	float r = lightDir.length();
+
+	//calculate diffuse
+	float vdl = v.normal.Dot(lightDir);
+	if (vdl < 0)
+	{
+		vdl = 0;
+	}
+	float diffuse = (light->lightIntensity / (r * r)) * vdl;
+
+	//calculate specular
+	Vector3f h = (lightDir + viewDir)* (1 / (lightDir + viewDir).length());
+	float vdh = v.normal.Dot(h);
+	if (vdh < 0)
+	{
+		vdh = 0;
+	}
+	float specular = (light->lightIntensity / (r * r)) * vdh;
+
+
 	Color color(255, 255, 255, 255);
 	if (tex->data)
 	{
 		Vector3f c3 = tex->Sample2D(v.uv[0]);
+		c3 *= (diffuse + specular);
 		color.r = c3.x;
 		color.g = c3.y;
 		color.b = c3.z;

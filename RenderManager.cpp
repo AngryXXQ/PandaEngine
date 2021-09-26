@@ -9,6 +9,8 @@ RenderManager::RenderManager()
 	height = 800;
 	viewportMatrix = viewportMatrix.UnitMatrix4();
 	frameBuffer.ResizeBuffer(width, height);
+	light = new Light(Vector3f(0, 50, 10), LightType::DIRECTION_LIGHT);
+	light->lightIntensity = 2005;
 }
 
 RenderManager::~RenderManager() 
@@ -98,6 +100,8 @@ void RenderManager::Init(HWND hwnd,float w, float h)
 	viewportMatrix(0, 3) = width / 2;
 	viewportMatrix(1, 1) = height / 2;
 	viewportMatrix(1, 3) = height / 2;
+	shader.mainCamera = m_MainCamera;
+	shader.light = light;
 }
 
 //#define DRAW_LINE 1
@@ -112,7 +116,6 @@ void RenderManager::Update()
 	{
 		return;
 	}
-
 	shader.V = m_MainCamera->viewMatrix;
 	shader.P = m_MainCamera->projectionMatrix;
 	int count = 0;

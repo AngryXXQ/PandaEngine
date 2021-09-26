@@ -11,5 +11,6 @@ public:
 public:
 	Vector3f pos;
 	LightType lightType;
+	float lightIntensity;
 };
 

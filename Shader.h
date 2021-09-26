@@ -1,6 +1,8 @@
 #pragma once
 #include "IncludeManager.h"
 #include "Texture.h"
+#include "Light.h"
+#include "Camera.h"
 
 class Shader
 {
@@ -20,5 +22,9 @@ public:
 	Matrix4 MV;
 	Matrix4 MVP;
 	Texture* tex;
+	Light* light;
+	Camera* mainCamera;
+	Vector3f lightDir;
+	Vector3f viewDir;
 };
 
