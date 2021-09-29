@@ -27,6 +27,25 @@ struct Color
 		b = c3;
 		a = c4;
 	}
+
+	Color operator*(float t)
+	{
+		Color temp(r,g,b,a);
+		temp.r *= t;
+		temp.g *= t;
+		temp.b *= t;
+		temp.a *= t;
+		return temp;
+	}
+
+	Color operator+(Color t)
+	{
+		r += t.r;
+		g += t.g;
+		b += t.b;
+		a += t.a;
+		return *this;
+	}
 };
 
 enum LightType

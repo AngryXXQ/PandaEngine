@@ -9,7 +9,7 @@ RenderManager::RenderManager()
 	height = 800;
 	viewportMatrix = viewportMatrix.UnitMatrix4();
 	frameBuffer.ResizeBuffer(width, height);
-	light = new Light(Vector3f(0, 50, 10), LightType::DIRECTION_LIGHT);
+	light = new Light(Vector3f(0, 50, 10), LightType::DIRECTION_LIGHT,Color(255,255,255,255));
 	light->lightIntensity = 2005;
 }
 
