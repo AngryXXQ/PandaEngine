@@ -4,8 +4,8 @@ Light::Light()
 {
 	pos = Vector3f(0,0,0);
 	lightType = LightType::DIRECTION_LIGHT;
-	lightIntensity = 1;
-	lightColor = Color(255, 255, 255, 255);
+	lightIntensity = 100;
+	lightColor = Color(1, 1, 1, 1);
 }
 
 Light::~Light()

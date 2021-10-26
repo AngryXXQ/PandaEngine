@@ -38,6 +38,7 @@ public:
 	void AddModel(const char* model_name, const char* tex_path, Transform t);
 	void initRenderManager(HWND hwnd);
 	void ChangeCameraPos(Vector3f offset);
+	void IncreaseLightIntensity();
 	void RotateModels(Vector3f rot);
 	bool FaceCulling(Vector3f v0, Vector3f v1, Vector3f v2);//ÃæÌÞ³ý
 

@@ -252,6 +252,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 rotation.z -= detal;
                 RenderManager::getInstance()->RotateModels(rotation);
             }
+            else if (wParam == VK_NUMPAD9)
+            {
+                RenderManager::getInstance()->IncreaseLightIntensity();
+            }
             RenderManager::getInstance()->ChangeCameraPos(offset);
         }
         break;

@@ -20,7 +20,8 @@ Shader::~Shader()
 Vertex Shader::VertexShader(Vertex v)
 {
 	v.vertex = MVP * v.vertex;
-	v.normal = MVP * v.normal;
+	v.normal = M.Inverse().Transpose() * v.normal;
+	v.normal.normalized();
 	return v;
 }
 
@@ -29,12 +30,12 @@ Color Shader::FragmentShader(Vertex v)
 	if (light)
 	{
 		lightDir = light->pos - v.vertex;
-		lightDir = lightDir.normalized();
+		lightDir.normalized();
 	}
 	if (mainCamera)
 	{
 		viewDir = mainCamera->position - v.vertex;
-		viewDir = viewDir.normalized();
+		viewDir.normalized();
 	}
 	float r = lightDir.length();
 
@@ -45,20 +46,19 @@ Color Shader::FragmentShader(Vertex v)
 		vdl = 0;
 	}
 	//float diffuse = (light->lightIntensity / (r * r)) * vdl;
-	Color diffuse = light->lightColor * vdl;
+	Color diffuse = light->lightColor * vdl * light->lightIntensity;
 
 	//calculate specular
-	/*
 	Vector3f h = (lightDir + viewDir)* (1 / (lightDir + viewDir).length());
-	float vdh = v.normal.Dot(h);
+	float vdh = v.normal.Dot(h.normalized());
 	if (vdh < 0)
 	{
 		vdh = 0;
 	}
-	float specular = (light->lightIntensity / (r * r)) * vdh;
-	*/
+	//float specular = (light->lightIntensity / (r * r)) * vdh;
+	Color specular = light->lightColor * vdh * light->lightIntensity;
 
-	Color color(255, 255, 255, 255);
+	Color color(1, 1, 1, 1);
 	if (tex->data)
 	{
 		Vector3f c3 = tex->Sample2D(v.uv[0]);
