@@ -40,11 +40,12 @@ struct Color
 
 	Color operator+(Color t)
 	{
-		r += t.r;
-		g += t.g;
-		b += t.b;
-		a += t.a;
-		return *this;
+		Color temp(r, g, b, a);
+		temp.r += t.r;
+		temp.g += t.g;
+		temp.b += t.b;
+		temp.a += t.a;
+		return temp;
 	}
 };
 

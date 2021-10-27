@@ -19,6 +19,17 @@ Shader::~Shader()
 
 Vertex Shader::VertexShader(Vertex v)
 {
+	Vector3f vp = M * v.vertex;
+	if (light)
+	{
+		lightDir = light->pos - vp;
+		lightDir.normalized();
+	}
+	if (mainCamera)
+	{
+		viewDir = mainCamera->position - vp;
+		viewDir.normalized();
+	}
 	v.vertex = MVP * v.vertex;
 	v.normal = M.Inverse().Transpose() * v.normal;
 	v.normal.normalized();
@@ -27,16 +38,6 @@ Vertex Shader::VertexShader(Vertex v)
 
 Color Shader::FragmentShader(Vertex v)
 {
-	if (light)
-	{
-		lightDir = light->pos - v.vertex;
-		lightDir.normalized();
-	}
-	if (mainCamera)
-	{
-		viewDir = mainCamera->position - v.vertex;
-		viewDir.normalized();
-	}
 	float r = lightDir.length();
 
 	//calculate diffuse
@@ -55,6 +56,7 @@ Color Shader::FragmentShader(Vertex v)
 	{
 		vdh = 0;
 	}
+	//vdh = pow(vdh,20);
 	//float specular = (light->lightIntensity / (r * r)) * vdh;
 	Color specular = light->lightColor * vdh * light->lightIntensity;
 
@@ -66,7 +68,7 @@ Color Shader::FragmentShader(Vertex v)
 		color.g = c3.y;
 		color.b = c3.z;
 		color.a = c3.w;
-		color = color + diffuse;
+		color = color + specular;
 	}
 	return color;
 }

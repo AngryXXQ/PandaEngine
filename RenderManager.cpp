@@ -9,8 +9,8 @@ RenderManager::RenderManager()
 	height = 800;
 	viewportMatrix = viewportMatrix.UnitMatrix4();
 	frameBuffer.ResizeBuffer(width, height);
-	light = new Light(Vector3f(0, 50, -20), LightType::DIRECTION_LIGHT,Color(1,1,1,1));
-	light->lightIntensity = 100;
+	light = new Light(Vector3f(0, 50, -20), LightType::DIRECTION_LIGHT,Color(255,255,255,255));
+	light->lightIntensity = 10;
 }
 
 RenderManager::~RenderManager() 
@@ -28,7 +28,8 @@ void RenderManager::ChangeCameraPos(Vector3f offset)
 
 void RenderManager::IncreaseLightIntensity()
 {
-	++light->lightIntensity;
+	//++light->lightIntensity;
+	light->pos.x += 5;
 }
 
 void RenderManager::RotateModels(Vector3f rot)
