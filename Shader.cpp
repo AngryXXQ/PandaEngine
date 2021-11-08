@@ -19,17 +19,7 @@ Shader::~Shader()
 
 Vertex Shader::VertexShader(Vertex v)
 {
-	Vector3f vp = M * v.vertex;
-	if (light)
-	{
-		lightDir = light->pos - vp;
-		lightDir.normalized();
-	}
-	if (mainCamera)
-	{
-		viewDir = mainCamera->position - vp;
-		viewDir.normalized();
-	}
+	v.vWorldPos = M * v.vertex;
 	v.vertex = MVP * v.vertex;
 	v.normal = M.Inverse().Transpose() * v.normal;
 	v.normal.normalized();
@@ -39,6 +29,16 @@ Vertex Shader::VertexShader(Vertex v)
 Color Shader::FragmentShader(Vertex v)
 {
 	float r = lightDir.length();
+	if (light)
+	{
+		lightDir = light->pos - v.vWorldPos;
+		lightDir.normalized();
+	}
+	if (mainCamera)
+	{
+		viewDir = mainCamera->position - v.vWorldPos;
+		viewDir.normalized();
+	}
 
 	//calculate diffuse
 	float vdl = v.normal.Dot(lightDir);
@@ -68,13 +68,16 @@ Color Shader::FragmentShader(Vertex v)
 		color.g = c3.y;
 		color.b = c3.z;
 		color.a = c3.w;
-		color = color + specular;
 	}
+	color = color + specular;
 	return color;
 }
 
 bool Shader::SetTexture(std::string filepath)
 {
-	tex->LoadTexture(filepath);
+	if(filepath != "")
+	{
+		tex->LoadTexture(filepath);
+	}
 	return true;
 }

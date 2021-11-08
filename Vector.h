@@ -148,4 +148,5 @@ struct Vertex
 	Vector3f uv[2];    //纹理坐标
 	Vector3f normal;   //法线
 	Vector3f tangent;  //切线
+	Vector3f vWorldPos;   //顶点世界坐标
 };
