@@ -56,7 +56,7 @@ Color Shader::FragmentShader(Vertex v)
 	{
 		vdh = 0;
 	}
-	//vdh = pow(vdh,20);
+	vdh = pow(vdh,5);
 	//float specular = (light->lightIntensity / (r * r)) * vdh;
 	Color specular = light->lightColor * vdh * light->lightIntensity;
 
@@ -69,7 +69,7 @@ Color Shader::FragmentShader(Vertex v)
 		color.b = c3.z;
 		color.a = c3.w;
 	}
-	color = color + specular;
+	color = color +specular;
 	return color;
 }
 

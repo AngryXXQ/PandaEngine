@@ -9,8 +9,8 @@ RenderManager::RenderManager()
 	height = 800;
 	viewportMatrix = viewportMatrix.UnitMatrix4();
 	frameBuffer.ResizeBuffer(width, height);
-	light = new Light(Vector3f(0, 50, -20), LightType::DIRECTION_LIGHT,Color(255,255,255,255));
-	light->lightIntensity = 10;
+	light = new Light(Vector3f(0, 50, -20), LightType::DIRECTION_LIGHT,Color(0,255,0,255));
+	light->lightIntensity = 50;
 }
 
 RenderManager::~RenderManager() 
@@ -764,6 +764,7 @@ Vector3f RenderManager::LerpA(Vector3f& v1, Vector3f& v2, float factor) {
 Vertex RenderManager::lerp(Vertex& v1, Vertex& v2, float& factor) {
 	Vertex result;
 	result.vertex = LerpA(v1.vertex, v2.vertex, factor);
+	result.vWorldPos = LerpA(v1.vWorldPos, v2.vWorldPos, factor);
 	result.color = LerpA(v1.color, v2.color, factor);
 	result.normal = LerpA(v1.normal, v2.normal, factor);
 	result.uv[0] = LerpA(v1.uv[0], v2.uv[0], factor);
