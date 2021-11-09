@@ -50,13 +50,13 @@ Color Shader::FragmentShader(Vertex v)
 	Color diffuse = light->lightColor * vdl * light->lightIntensity;
 
 	//calculate specular
-	Vector3f h = (lightDir + viewDir)* (1 / (lightDir + viewDir).length());
+	Vector3f h = (lightDir + viewDir).normalized();
 	float vdh = v.normal.Dot(h.normalized());
 	if (vdh < 0)
 	{
 		vdh = 0;
 	}
-	vdh = pow(vdh,5);
+	vdh = pow(vdh,15);
 	//float specular = (light->lightIntensity / (r * r)) * vdh;
 	Color specular = light->lightColor * vdh * light->lightIntensity;
 
