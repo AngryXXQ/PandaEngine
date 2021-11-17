@@ -47,6 +47,16 @@ struct Color
 		temp.a += t.a;
 		return temp;
 	}
+
+	Color operator*(Color t)
+	{
+		Color temp(r, g, b, a);
+		temp.r *= t.r;
+		temp.g *= t.g;
+		temp.b *= t.b;
+		temp.a *= t.a;
+		return temp;
+	}
 };
 
 enum LightType

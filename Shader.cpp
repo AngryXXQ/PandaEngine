@@ -10,6 +10,7 @@ Shader::Shader()
 	tex = new Texture();
 	lightDir = Vector3f(0, 0, 0);
 	viewDir = Vector3f(0, 0, 0);
+	ambient = Color(1,1,1,1);
 }
 
 Shader::~Shader()
@@ -69,7 +70,7 @@ Color Shader::FragmentShader(Vertex v)
 		color.b = c3.z;
 		color.a = c3.w;
 	}
-	color = color +specular;
+	color = ambient*color +specular;
 	return color;
 }
 

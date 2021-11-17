@@ -26,5 +26,6 @@ public:
 	Camera* mainCamera;
 	Vector3f lightDir;
 	Vector3f viewDir;
+	Color ambient;
 };
 
